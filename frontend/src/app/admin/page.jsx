@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./admin.module.css";
 
 export default function AdminDashboard() {
@@ -25,6 +25,39 @@ export default function AdminDashboard() {
             .toLowerCase()
             .includes(busca.toLowerCase())
     );
+
+    const [resumo, setResumo] = useState({
+        candidatos: 0,
+        empresas: 0,
+        vagasAbertas: 0,
+        denunciasPendentes: 0,
+    });
+
+    const [carregando, setCarregando] = useState(true);
+    const [erro, setErro] = useState("");
+
+    useEffect(() => {
+        async function carregarResumo() {
+            try {
+                const resposta = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"}/admin/resumo`
+                );
+
+                if (!resposta.ok) {
+                    throw new Error("Não foi possível carregar os indicadores.");
+                }
+
+                const dados = await resposta.json();
+                setResumo(dados);
+            } catch (error) {
+                setErro(error.message);
+            } finally {
+                setCarregando(false);
+            }
+        }
+
+        carregarResumo();
+    }, []);
 
     return (
         <div className={styles.container}>
@@ -57,10 +90,10 @@ export default function AdminDashboard() {
                         <>
                             <section className={styles.indicadores}>
                                 {[
-                                    ["Candidatos", "3"],
-                                    ["Empresas", "2"],
-                                    ["Vagas abertas", "5"],
-                                    ["Denúncias pendentes", "1"],
+                                    ["Candidatos", resumo.candidatos],
+                                    ["Empresas", resumo.empresas],
+                                    ["Vagas abertas", resumo.vagasAbertas],
+                                    ["Denúncias pendentes", resumo.denunciasPendentes]
                                 ].map(([titulo, valor]) => (
                                     <div className={styles.card} key={titulo}>
                                         <p>{titulo}</p>
