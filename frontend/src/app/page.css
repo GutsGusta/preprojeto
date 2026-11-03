@@ -1,0 +1,102 @@
+.page {
+  background: #f6f7f9;
+  color: #172033;
+  display: flex;
+  min-height: 100vh;
+  justify-content: center;
+  padding: 48px 24px;
+}
+
+.cabecalho {
+  color: #000;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: min-content;
+  align-items: center;
+  justify-content: space-between;
+  height: 67px;
+}
+
+.cabecalho h3 {
+  color: #C65D0A;
+}
+
+.cabecalho-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.entrar {
+  color: #C65D0A;
+  border: solid 1px #C65D0A;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.cadastrar {
+  background-color: #C65D0A;
+  color: white;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.txt-vagas {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.txt-vagas Link {
+  color: #C65D0A;
+  text-decoration: overline;
+}
+
+.vagas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-vaga {
+  border: solid 1px rgb(202, 202, 202);
+  border-radius: 20px;
+}
+
+.card-vaga img {
+  width: 75px;
+  height: auto;
+  border-radius: 10px;
+}
+
+.sou-algo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card-sou {
+  border: solid 1px rgb(151, 151, 151);
+  border-radius: 20px;
+  padding: 20px;
+  gap: 30px;
+
+}
+
+.sou-usuario {
+  background-color: #C65D0A;
+  color: #fff;
+  border-radius: 5px;
+  padding: 5px;
+  margin-top: 20px;
+}
+
+.sou-empresa {
+  color: #C65D0A;
+  border: solid 1px #C65D0A;
+  border-radius: 5px;
+  padding: 5px;
+  margin-top: 20px; 
+}
