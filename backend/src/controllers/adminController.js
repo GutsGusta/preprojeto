@@ -29,3 +29,27 @@ export async function obterResumoAdmin(req, res, next) {
     next(erro);
   }
 }
+
+
+export async function listarUsuarios(req, res, next) {
+  try {
+    const [usuarios] = await pool.query(`
+          SELECT
+              u.id_usuario AS id,
+              COALESCE(c.nome, r.nome, 'Administrador') AS nome,
+              u.email,
+              u.perfil,
+              u.ativo
+          FROM usuario u
+          LEFT JOIN candidato c
+              ON c.usuario_id = u.id_usuario
+          LEFT JOIN recrutador r
+              ON r.usuario_id = u.id_usuario
+          ORDER BY u.id_usuario DESC
+      `);
+
+    res.json(usuarios);
+  } catch (erro) {
+    next(erro);
+  }
+}
