@@ -19,6 +19,8 @@
 
 .cabecalho h3 {
   color: #C65D0A;
+  margin-left: 40px;
+  margin-top: 15px;
 }
 
 .cabecalho-btn {
@@ -26,42 +28,84 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
+  margin-top: 15px;
+}
+
+.btn-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 15px;
+  margin-left: 300px;
 }
 
 .entrar {
   color: #C65D0A;
   border: solid 1px #C65D0A;
   border-radius: 5px;
-  padding: 5px;
+  padding: 7px;
 }
 
 .cadastrar {
   background-color: #C65D0A;
   color: white;
   border-radius: 5px;
-  padding: 5px;
+  padding: 7px;
+}
+
+main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.texto {
+  background-color: rgb(218, 218, 218);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  height: 500px;
+}
+
+.pagina {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
 }
 
 .txt-vagas {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 }
 
-.txt-vagas Link {
+.btn-vagas {
   color: #C65D0A;
-  text-decoration: overline;
+  text-decoration: underline;
 }
 
 .vagas {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 40px;
 }
 
 .card-vaga {
-  border: solid 1px rgb(202, 202, 202);
+  border: solid 1px #cacaca;
   border-radius: 20px;
+  width: 400px;
+  padding: 20px;
+  margin-top: 20px;
 }
 
 .card-vaga img {
@@ -70,33 +114,37 @@
   border-radius: 10px;
 }
 
+.txt-detalhe {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 90px;
+}
+
+.txt-nome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 .sou-algo {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 50px;
 }
 
 .card-sou {
-  border: solid 1px rgb(151, 151, 151);
+  display: flex;
+  align-items: start;
+  justify-content: start;
+  flex-direction: column;
+  border: solid 1px #cacaca;
   border-radius: 20px;
   padding: 20px;
-  gap: 30px;
-
-}
-
-.sou-usuario {
-  background-color: #C65D0A;
-  color: #fff;
-  border-radius: 5px;
-  padding: 5px;
-  margin-top: 20px;
-}
-
-.sou-empresa {
-  color: #C65D0A;
-  border: solid 1px #C65D0A;
-  border-radius: 5px;
-  padding: 5px;
-  margin-top: 20px; 
+  gap: 10px;
+  width: 600px;
+  height: 200px;
+  font-size: 20px;
 }
