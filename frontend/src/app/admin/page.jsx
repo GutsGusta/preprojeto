@@ -6,6 +6,8 @@ import styles from "./admin.module.css";
 export default function AdminDashboard() {
     const [pagina, setPagina] = useState("Visão geral");
     const [busca, setBusca] = useState("");
+    const [filtroPerfil, setFiltroPerfil] = useState("Todos");
+    const [filtroSituacao, setFiltroSituacao] = useState("Todos");
 
     const menus = [
         "Visão geral",
@@ -20,11 +22,23 @@ export default function AdminDashboard() {
         { nome: "Bruno Costa", email: "bruno@exemplo.com", perfil: "Candidato", ativo: false },
     ];
 
-    const usuariosFiltrados = usuarios.filter((usuario) =>
-        `${usuario.nome} ${usuario.email}`
-            .toLowerCase()
-            .includes(busca.toLowerCase())
-    );
+    const usuariosFiltrados = usuarios.filter((usuario) => {
+        const correspondeBusca =
+            `${usuario.nome} ${usuario.email}`
+                .toLowerCase()
+                .includes(busca.toLowerCase());
+
+        const correspondePerfil =
+            filtroPerfil === "Todos" ||
+            usuario.perfil === filtroPerfil;
+
+        const correspondeSituacao =
+            filtroSituacao === "Todos" ||
+            (filtroSituacao === "Ativos" && usuario.ativo) ||
+            (filtroSituacao === "Bloqueados" && !usuario.ativo);
+
+        return correspondeBusca && correspondePerfil && correspondeSituacao;
+    });
 
     const [resumo, setResumo] = useState({
         candidatos: 0,
@@ -163,6 +177,77 @@ export default function AdminDashboard() {
                                 </div>
                             </section>
                         </>
+                    ) : pagina === "Usuários" ? (
+                        <section className={styles.painel}>
+                            <div className={styles.painelHeader}>
+                                <h2>Gerenciamento de usuários</h2>
+                                <input
+                                    type="text"
+                                    placeholder="Buscar por nome ou e-mail"
+                                    value={busca}
+                                    onChange={(e) => setBusca(e.target.value)}
+                                />
+                            </div>
+
+                            <p>Consulte os usuários cadastrados na plataforma.</p>
+
+                            <div className={styles.filtros}>
+                                <select
+                                    value={filtroPerfil}
+                                    onChange={(e) => setFiltroPerfil(e.target.value)}
+                                >
+                                    <option value="Todos">Todos os perfis</option>
+                                    <option value="Candidato">Candidatos</option>
+                                    <option value="Recrutador">Recrutadores</option>
+                                    <option value="Administrador">Administradores</option>
+                                </select>
+
+                                <select
+                                    value={filtroSituacao}
+                                    onChange={(e) => setFiltroSituacao(e.target.value)}
+                                >
+                                    <option value="Todos">Todas as situações</option>
+                                    <option value="Ativos">Ativos</option>
+                                    <option value="Bloqueados">Bloqueados</option>
+                                </select>
+                            </div>
+
+                            <div className={styles.tableWrapper}>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>E-mail</th>
+                                            <th>Perfil</th>
+                                            <th>Situação</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {usuariosFiltrados.map((usuario) => (
+                                            <tr key={usuario.email}>
+                                                <td>{usuario.nome}</td>
+                                                <td>{usuario.email}</td>
+                                                <td>{usuario.perfil}</td>
+                                                <td>
+                                                    {usuario.ativo ? "Ativo" : "Bloqueado"}
+                                                </td>
+                                                <td>
+                                                    <button disabled>
+                                                        Gerenciar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+
+                                {usuariosFiltrados.length === 0 && (
+                                    <p>Nenhum usuário encontrado.</p>
+                                )}
+                            </div>
+                        </section>
                     ) : (
                         <section className={styles.painel}>
                             <p>Área de {pagina.toLowerCase()} em desenvolvimento.</p>
