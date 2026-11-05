@@ -18,6 +18,7 @@ export default function AdminDashboard() {
 
     const [usuarios, setUsuarios] = useState([]);
     const [empresas, setEmpresas] = useState([]);
+    const [relatorioCandidaturas, setRelatorioCandidaturas] = useState([]);
     const [buscaEmpresa, setBuscaEmpresa] = useState("");
 
     useEffect(() => {
@@ -58,6 +59,27 @@ export default function AdminDashboard() {
         return correspondeBusca && correspondePerfil && correspondeSituacao;
     });
 
+    useEffect(() => {
+        async function carregarRelatorioCandidaturas() {
+            try {
+                const resposta = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"}/admin/relatorios/candidaturas`
+                );
+
+                if (!resposta.ok) {
+                    throw new Error("Erro ao carregar relatório de candidaturas");
+                }
+
+                const dados = await resposta.json();
+                setRelatorioCandidaturas(dados);
+            } catch (erro) {
+                console.error("Erro ao carregar relatório:", erro);
+            }
+        }
+
+        carregarRelatorioCandidaturas();
+    }, []);
+    
     useEffect(() => {
         async function carregarEmpresas() {
             try {
@@ -331,13 +353,78 @@ export default function AdminDashboard() {
                                     </div>
                                 ))}
                             </section>
-                    
+
                             <section className={styles.painel}>
-                                <h2>Resumo da plataforma</h2>
+                                <h2>Candidaturas por status</h2>
+
                                 <p>
-                                    Acompanhe os principais indicadores de utilização
-                                    do JobMatch.
+                                    Distribuição das candidaturas registradas
+                                    na plataforma.
                                 </p>
+
+                                <div style={{ marginTop: "25px" }}>
+                                    {relatorioCandidaturas.length === 0 ? (
+                                        <p>Nenhuma candidatura encontrada.</p>
+                                    ) : (
+                                        relatorioCandidaturas.map((item) => {
+                                            const total = relatorioCandidaturas.reduce(
+                                                (soma, atual) => soma + Number(atual.quantidade),
+                                                0
+                                            );
+
+                                            const percentual = total > 0
+                                                ? (Number(item.quantidade) / total) * 100
+                                                : 0;
+
+                                            const nomesStatus = {
+                                                ENVIADA: "Enviadas",
+                                                EM_ANALISE: "Em análise",
+                                                ENTREVISTA: "Entrevista",
+                                                APROVADO: "Aprovadas",
+                                                REPROVADO: "Reprovadas"
+                                            };
+
+                                            return (
+                                                <div key={item.status} style={{ marginBottom: "22px" }}>
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
+                                                            justifyContent: "space-between",
+                                                            marginBottom: "8px"
+                                                        }}
+                                                    >
+                                                        <strong>
+                                                            {nomesStatus[item.status] || item.status}
+                                                        </strong>
+
+                                                        <span>
+                                                            {item.quantidade} ({percentual.toFixed(1)}%)
+                                                        </span>
+                                                    </div>
+
+                                                    <div
+                                                        style={{
+                                                            width: "100%",
+                                                            height: "18px",
+                                                            backgroundColor: "#e5e7eb",
+                                                            borderRadius: "10px",
+                                                            overflow: "hidden"
+                                                        }}
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                width: `${percentual}%`,
+                                                                height: "100%",
+                                                                backgroundColor: "#2563eb",
+                                                                borderRadius: "10px"
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            );
+                                        })
+                                    )}
+                                </div>
                             </section>
                         </>
                     ) : (
