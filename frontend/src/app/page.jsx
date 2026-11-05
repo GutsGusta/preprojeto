@@ -1,5 +1,10 @@
 import Link from "next/link";
 import "./page.css";
+import { redirect } from 'next/navigation';
+
+export function Inicio() {
+  redirect('/vagas');
+}
 
 export default function Home() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
@@ -9,7 +14,7 @@ export default function Home() {
       <div className="cabecalho">
         <h3>JobMatch</h3>
         <div className="cabecalho-btn">
-          <Link href="">Vagas</Link>
+          <Link href="/vagas">Vagas</Link>
           <Link href="">Empresas</Link>
           <Link href="">Para empresas</Link>
         </div>
