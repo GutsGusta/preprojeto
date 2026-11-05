@@ -17,25 +17,42 @@ export default function AdminDashboard() {
         "Relatórios gerais",
     ];
 
-    const usuarios = [
-        { nome: "Ana Silva", email: "ana@exemplo.com", perfil: "Candidato", ativo: true },
-        { nome: "Bruno Costa", email: "bruno@exemplo.com", perfil: "Candidato", ativo: false },
-    ];
+    const [usuarios, setUsuarios] = useState([]);
+
+    useEffect(() => {
+        async function carregarUsuarios() {
+            try {
+                const resposta = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"}/admin/usuarios`
+                );
+
+                if (!resposta.ok) {
+                    throw new Error("Erro ao buscar usuários");
+                }
+
+                const dados = await resposta.json();
+                setUsuarios(dados);
+            } catch (erro) {
+                console.error("Erro ao carregar usuários:", erro);
+            }
+        }
+
+        carregarUsuarios();
+    }, []);
 
     const usuariosFiltrados = usuarios.filter((usuario) => {
         const correspondeBusca =
-            `${usuario.nome} ${usuario.email}`
-                .toLowerCase()
-                .includes(busca.toLowerCase());
+            usuario.nome.toLowerCase().includes(busca.toLowerCase()) ||
+            usuario.email.toLowerCase().includes(busca.toLowerCase());
 
         const correspondePerfil =
             filtroPerfil === "Todos" ||
-            usuario.perfil === filtroPerfil;
+            usuario.perfil.toLowerCase() === filtroPerfil.toLowerCase();
 
         const correspondeSituacao =
             filtroSituacao === "Todos" ||
-            (filtroSituacao === "Ativos" && usuario.ativo) ||
-            (filtroSituacao === "Bloqueados" && !usuario.ativo);
+            (filtroSituacao === "Ativo" && Boolean(usuario.ativo)) ||
+            (filtroSituacao === "Inativo" && !Boolean(usuario.ativo));
 
         return correspondeBusca && correspondePerfil && correspondeSituacao;
     });
