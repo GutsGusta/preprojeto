@@ -54,3 +54,24 @@ export async function listarUsuarios(req, res, next) {
     next(erro);
   }
 }
+
+export async function listarEmpresas(req, res, next) {
+  try {
+    const [empresas] = await pool.query(`
+      SELECT
+        id_empresa AS id,
+        nome_fantasia AS nome,
+        razao_social,
+        cnpj,
+        setor,
+        cidade,
+        uf
+      FROM empresa
+      ORDER BY id_empresa DESC
+    `);
+
+    return res.json(empresas);
+  } catch (erro) {
+    next(erro);
+  }
+}
