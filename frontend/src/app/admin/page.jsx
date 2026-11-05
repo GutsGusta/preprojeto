@@ -17,6 +17,8 @@ export default function AdminDashboard() {
     ];
 
     const [usuarios, setUsuarios] = useState([]);
+    const [empresas, setEmpresas] = useState([]);
+    const [buscaEmpresa, setBuscaEmpresa] = useState("");
 
     useEffect(() => {
         async function carregarUsuarios() {
@@ -55,6 +57,27 @@ export default function AdminDashboard() {
 
         return correspondeBusca && correspondePerfil && correspondeSituacao;
     });
+
+    useEffect(() => {
+        async function carregarEmpresas() {
+            try {
+                const resposta = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"}/admin/empresas`
+                );
+
+                if (!resposta.ok) {
+                    throw new Error("Erro ao buscar empresas");
+                }
+
+                const dados = await resposta.json();
+                setEmpresas(dados);
+            } catch (erro) {
+                console.error("Erro ao carregar empresas:", erro);
+            }
+        }
+
+        carregarEmpresas();
+    }, []);
 
     const [resumo, setResumo] = useState({
         candidatos: 0,
@@ -237,6 +260,86 @@ export default function AdminDashboard() {
                                 )}
                             </div>
                         </section>
+                    ) : pagina === "Empresas" ? (
+                        <section className={styles.painel}>
+                            <div className={styles.painelHeader}>
+                                <h2>Gerenciamento de empresas</h2>
+
+                                <input
+                                    type="text"
+                                    placeholder="Buscar por nome ou CNPJ"
+                                    value={buscaEmpresa}
+                                    onChange={(e) => setBuscaEmpresa(e.target.value)}
+                                />
+                            </div>
+
+                            <p>Consulte as empresas cadastradas na plataforma.</p>
+
+                            <div className={styles.tableWrapper}>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Empresa</th>
+                                            <th>CNPJ</th>
+                                            <th>Setor</th>
+                                            <th>Localização</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {empresas
+                                            .filter((empresa) => {
+                                                const pesquisa = buscaEmpresa.toLowerCase().trim();
+
+                                                return (
+                                                    String(empresa.nome ?? "")
+                                                        .toLowerCase()
+                                                        .includes(pesquisa) ||
+                                                    String(empresa.cnpj ?? "")
+                                                        .toLowerCase()
+                                                        .includes(pesquisa)
+                                                );
+                                            })
+                                            .map((empresa) => (
+                                                <tr key={empresa.id}>
+                                                    <td>{empresa.nome}</td>
+                                                    <td>{empresa.cnpj}</td>
+                                                    <td>{empresa.setor || "Não informado"}</td>
+                                                    <td>
+                                                        {[empresa.cidade, empresa.uf]
+                                                            .filter(Boolean)
+                                                            .join(" - ") || "Não informado"}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    ) : pagina === "Relatórios gerais" ? (
+                        <>
+                            <section className={styles.indicadores}>
+                                {[
+                                    ["Total de candidatos", resumo.candidatos],
+                                    ["Total de empresas", resumo.empresas],
+                                    ["Vagas abertas", resumo.vagasAbertas],
+                                    ["Total de candidaturas", resumo.totalCandidaturas]
+                                ].map(([titulo, valor]) => (
+                                    <div className={styles.card} key={titulo}>
+                                        <p>{titulo}</p>
+                                        <h2>{valor}</h2>
+                                    </div>
+                                ))}
+                            </section>
+                    
+                            <section className={styles.painel}>
+                                <h2>Resumo da plataforma</h2>
+                                <p>
+                                    Acompanhe os principais indicadores de utilização
+                                    do JobMatch.
+                                </p>
+                            </section>
+                        </>
                     ) : (
                         <section className={styles.painel}>
                             <p>Área de {pagina.toLowerCase()} em desenvolvimento.</p>
