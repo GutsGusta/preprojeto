@@ -75,3 +75,20 @@ export async function listarEmpresas(req, res, next) {
     next(erro);
   }
 }
+
+export async function relatorioCandidaturas(req, res, next) {
+  try {
+      const [resultado] = await pool.query(`
+          SELECT
+              status,
+              COUNT(*) AS quantidade
+          FROM candidatura
+          GROUP BY status
+          ORDER BY quantidade DESC
+      `);
+
+      return res.json(resultado);
+  } catch (erro) {
+      next(erro);
+  }
+}
