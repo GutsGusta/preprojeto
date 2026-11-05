@@ -12,19 +12,44 @@ export async function obterResumoAdmin(req, res, next) {
     );
 
     const [vagas] = await pool.query(
-      "SELECT COUNT(*) AS total FROM vaga WHERE status = 'Publicada'"
+      "SELECT COUNT(*) AS total FROM vaga WHERE status = 'PUBLICADA'"
     );
 
-    const [denuncias] = await pool.query(
-      "SELECT COUNT(*) AS total FROM denuncia_vaga WHERE status = 'PENDENTE'"
+    const [candidaturas] = await pool.query(
+      "SELECT COUNT(*) AS total FROM candidatura"
     );
 
     return res.json({
       candidatos: candidatos[0].total,
       empresas: empresas[0].total,
       vagasAbertas: vagas[0].total,
-      denunciasPendentes: denuncias[0].total,
+      totalCandidaturas: candidaturas[0].total
     });
+
+  } catch (erro) {
+    next(erro);
+  }
+}
+
+
+export async function listarUsuarios(req, res, next) {
+  try {
+    const [usuarios] = await pool.query(`
+          SELECT
+              u.id_usuario AS id,
+              COALESCE(c.nome, r.nome, 'Administrador') AS nome,
+              u.email,
+              u.perfil,
+              u.ativo
+          FROM usuario u
+          LEFT JOIN candidato c
+              ON c.usuario_id = u.id_usuario
+          LEFT JOIN recrutador r
+              ON r.usuario_id = u.id_usuario
+          ORDER BY u.id_usuario DESC
+      `);
+
+    res.json(usuarios);
   } catch (erro) {
     next(erro);
   }
