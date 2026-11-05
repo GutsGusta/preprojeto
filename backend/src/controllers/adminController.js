@@ -12,19 +12,20 @@ export async function obterResumoAdmin(req, res, next) {
     );
 
     const [vagas] = await pool.query(
-      "SELECT COUNT(*) AS total FROM vaga WHERE status = 'Publicada'"
+      "SELECT COUNT(*) AS total FROM vaga WHERE status = 'PUBLICADA'"
     );
 
-    const [denuncias] = await pool.query(
-      "SELECT COUNT(*) AS total FROM denuncia_vaga WHERE status = 'PENDENTE'"
+    const [candidaturas] = await pool.query(
+      "SELECT COUNT(*) AS total FROM candidatura"
     );
 
     return res.json({
       candidatos: candidatos[0].total,
       empresas: empresas[0].total,
       vagasAbertas: vagas[0].total,
-      denunciasPendentes: denuncias[0].total,
+      totalCandidaturas: candidaturas[0].total
     });
+
   } catch (erro) {
     next(erro);
   }
