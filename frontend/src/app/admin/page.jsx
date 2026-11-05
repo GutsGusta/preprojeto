@@ -13,7 +13,6 @@ export default function AdminDashboard() {
         "Visão geral",
         "Usuários",
         "Empresas",
-        "Vagas denunciadas",
         "Relatórios gerais",
     ];
 
@@ -61,7 +60,7 @@ export default function AdminDashboard() {
         candidatos: 0,
         empresas: 0,
         vagasAbertas: 0,
-        denunciasPendentes: 0,
+        totalCandidaturas: 0,
     });
 
     const [carregando, setCarregando] = useState(true);
@@ -124,40 +123,13 @@ export default function AdminDashboard() {
                                     ["Candidatos", resumo.candidatos],
                                     ["Empresas", resumo.empresas],
                                     ["Vagas abertas", resumo.vagasAbertas],
-                                    ["Denúncias pendentes", resumo.denunciasPendentes]
+                                    ["Candidaturas", resumo.totalCandidaturas]
                                 ].map(([titulo, valor]) => (
                                     <div className={styles.card} key={titulo}>
                                         <p>{titulo}</p>
                                         <h2>{valor}</h2>
                                     </div>
                                 ))}
-                            </section>
-
-                            <section className={styles.painel}>
-                                <h2>Vagas denunciadas</h2>
-                                <div className={styles.tableWrapper}>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Vaga</th>
-                                                <th>Empresa</th>
-                                                <th>Motivo</th>
-                                                <th>Ações</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Desenvolvedor Front-End</td>
-                                                <td>Empresa Exemplo</td>
-                                                <td>Informações enganosas</td>
-                                                <td>
-                                                    <button disabled>Ignorar</button>
-                                                    <button disabled>Remover vaga</button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
                             </section>
 
                             <section className={styles.painel}>
@@ -214,9 +186,9 @@ export default function AdminDashboard() {
                                     onChange={(e) => setFiltroPerfil(e.target.value)}
                                 >
                                     <option value="Todos">Todos os perfis</option>
-                                    <option value="Candidato">Candidatos</option>
-                                    <option value="Recrutador">Recrutadores</option>
-                                    <option value="Administrador">Administradores</option>
+                                    <option value="CANDIDATO">Candidatos</option>
+                                    <option value="RECRUTADOR">Recrutadores</option>
+                                    <option value="ADMIN">Administradores</option>
                                 </select>
 
                                 <select
@@ -224,8 +196,8 @@ export default function AdminDashboard() {
                                     onChange={(e) => setFiltroSituacao(e.target.value)}
                                 >
                                     <option value="Todos">Todas as situações</option>
-                                    <option value="Ativos">Ativos</option>
-                                    <option value="Bloqueados">Bloqueados</option>
+                                    <option value="Ativo">Ativos</option>
+                                    <option value="Inativo">Bloqueados</option>
                                 </select>
                             </div>
 
