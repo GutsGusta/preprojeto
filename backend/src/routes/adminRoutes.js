@@ -1,10 +1,10 @@
-
 import { Router } from "express";
 import {
     obterResumoAdmin,
     listarUsuarios,
     listarEmpresas,
-    relatorioCandidaturas
+    relatorioCandidaturas,
+    listarVagasEmpresa
 } from "../controllers/adminController.js";
 
 const router = Router();
@@ -12,6 +12,7 @@ const router = Router();
 router.get("/resumo", obterResumoAdmin);
 router.get("/usuarios", listarUsuarios);
 router.get("/empresas", listarEmpresas);
+router.get("/empresas/:id/vagas", listarVagasEmpresa);
 router.get("/relatorios/candidaturas", relatorioCandidaturas);
 
 export default router;
