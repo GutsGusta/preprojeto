@@ -177,6 +177,61 @@
     outline-offset: 1px;
 }
 
+/* Fundo escurecido da janela */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 1000;
+  }
+  
+  /* Janela de detalhes */
+  .modal {
+    background: #ffffff;
+    width: 100%;
+    max-width: 460px;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    color: #1e293b;
+  }
+  
+  .modal h2 {
+    font-size: 22px;
+    margin-bottom: 24px;
+    color: #0f172a;
+  }
+  
+  .modal p {
+    margin-bottom: 14px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .modal p strong {
+    color: #334155;
+  }
+  
+  .modalFechar {
+    margin-top: 20px;
+    padding: 11px 24px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  
+  .modalFechar:hover {
+    background: #1d4ed8;
+  }
+
 @media (max-width: 900px) {
     .indicadores {
         grid-template-columns: repeat(2, minmax(0, 1fr));

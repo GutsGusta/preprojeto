@@ -17,7 +17,12 @@ export default function AdminDashboard() {
     ];
 
     const [usuarios, setUsuarios] = useState([]);
+    const [usuarioSelecionado, setUsuarioSelecionado] = useState(null);
     const [empresas, setEmpresas] = useState([]);
+    const [empresaSelecionada, setEmpresaSelecionada] = useState(null);
+    const [vagasEmpresa, setVagasEmpresa] = useState([]);
+    const [carregandoVagas, setCarregandoVagas] = useState(false);
+    const [erroVagas, setErroVagas] = useState("");
     const [relatorioCandidaturas, setRelatorioCandidaturas] = useState([]);
     const [buscaEmpresa, setBuscaEmpresa] = useState("");
 
@@ -79,7 +84,7 @@ export default function AdminDashboard() {
 
         carregarRelatorioCandidaturas();
     }, []);
-    
+
     useEffect(() => {
         async function carregarEmpresas() {
             try {
@@ -133,6 +138,39 @@ export default function AdminDashboard() {
 
         carregarResumo();
     }, []);
+
+    useEffect(() => {
+        if (!empresaSelecionada) {
+            setVagasEmpresa([]);
+            setErroVagas("");
+            return;
+        }
+
+        async function carregarVagas() {
+            setCarregandoVagas(true);
+            setErroVagas("");
+            setVagasEmpresa([]);
+
+            try {
+                const resposta = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"}/admin/empresas/${empresaSelecionada.id}/vagas`
+                );
+
+                if (!resposta.ok) {
+                    throw new Error("Erro ao buscar vagas da empresa");
+                }
+
+                const dados = await resposta.json();
+                setVagasEmpresa(dados);
+            } catch (erro) {
+                setErroVagas(erro.message);
+            } finally {
+                setCarregandoVagas(false);
+            }
+        }
+
+        carregarVagas();
+    }, [empresaSelecionada]);
 
     return (
         <div className={styles.container}>
@@ -203,7 +241,12 @@ export default function AdminDashboard() {
                                                     <td>{usuario.nome} - {usuario.email}</td>
                                                     <td>{usuario.perfil}</td>
                                                     <td>{usuario.ativo ? "Ativo" : "Bloqueado"}</td>
-                                                    <td><button disabled>Gerenciar</button></td>
+                                                    <td><button
+                                                        type="button"
+                                                        onClick={() => setUsuarioSelecionado(usuario)}
+                                                    >
+                                                        Gerenciar
+                                                    </button></td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -268,7 +311,10 @@ export default function AdminDashboard() {
                                                     {usuario.ativo ? "Ativo" : "Bloqueado"}
                                                 </td>
                                                 <td>
-                                                    <button disabled>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setUsuarioSelecionado(usuario)}
+                                                    >
                                                         Gerenciar
                                                     </button>
                                                 </td>
@@ -305,6 +351,7 @@ export default function AdminDashboard() {
                                             <th>CNPJ</th>
                                             <th>Setor</th>
                                             <th>Localização</th>
+                                            <th>Ações</th>
                                         </tr>
                                     </thead>
 
@@ -331,6 +378,14 @@ export default function AdminDashboard() {
                                                         {[empresa.cidade, empresa.uf]
                                                             .filter(Boolean)
                                                             .join(" - ") || "Não informado"}
+                                                    </td>
+                                                    <td>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setEmpresaSelecionada(empresa)}
+                                                        >
+                                                            Gerenciar
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -434,6 +489,130 @@ export default function AdminDashboard() {
                     )}
                 </main>
             </div>
+
+
+            {usuarioSelecionado && (
+                <div
+                    className={styles.modalOverlay}
+                    onClick={() => setUsuarioSelecionado(null)}
+                >
+                    <div
+                        className={styles.modal}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Detalhes do usuário"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h2>Detalhes do usuário</h2>
+
+                        <p>
+                            <strong>Nome:</strong> {usuarioSelecionado.nome}
+                        </p>
+
+                        <p>
+                            <strong>E-mail:</strong> {usuarioSelecionado.email}
+                        </p>
+
+                        <p>
+                            <strong>Perfil:</strong> {usuarioSelecionado.perfil}
+                        </p>
+
+                        <p>
+                            <strong>Situação:</strong>{" "}
+                            {usuarioSelecionado.ativo ? "Ativo" : "Bloqueado"}
+                        </p>
+
+                        <button
+                            type="button"
+                            className={styles.modalFechar}
+                            onClick={() => setUsuarioSelecionado(null)}
+                        >
+                            Fechar
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {empresaSelecionada && (
+                <div
+                    className={styles.modalOverlay}
+                    onClick={() => setEmpresaSelecionada(null)}
+                >
+                    <div
+                        className={styles.modal}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Detalhes da empresa"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h2>Detalhes da empresa</h2>
+
+                        <p>
+                            <strong>Nome:</strong> {empresaSelecionada.nome}
+                        </p>
+
+                        <p>
+                            <strong>Razão social:</strong>{" "}
+                            {empresaSelecionada.razao_social || "Não informado"}
+                        </p>
+
+                        <p>
+                            <strong>CNPJ:</strong> {empresaSelecionada.cnpj}
+                        </p>
+
+                        <p>
+                            <strong>Setor:</strong>{" "}
+                            {empresaSelecionada.setor || "Não informado"}
+                        </p>
+
+                        <p>
+                            <strong>Localização:</strong>{" "}
+                            {[empresaSelecionada.cidade, empresaSelecionada.uf]
+                                .filter(Boolean)
+                                .join(" - ") || "Não informado"}
+                        </p>
+
+                        <h3>Vagas publicadas</h3>
+
+                        {carregandoVagas ? (
+                            <p>Carregando vagas...</p>
+                        ) : erroVagas ? (
+                            <p>{erroVagas}</p>
+                        ) : vagasEmpresa.length === 0 ? (
+                            <p>Nenhuma vaga cadastrada.</p>
+                        ) : (
+                            <div className={styles.tableWrapper}>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Vaga</th>
+                                            <th>Status</th>
+                                            <th>Modalidade</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {vagasEmpresa.map((vaga) => (
+                                            <tr key={vaga.id}>
+                                                <td>{vaga.titulo}</td>
+                                                <td>{vaga.status}</td>
+                                                <td>{vaga.modalidade}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+
+                        <button
+                            type="button"
+                            className={styles.modalFechar}
+                            onClick={() => setEmpresaSelecionada(null)}
+                        >
+                            Fechar
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
