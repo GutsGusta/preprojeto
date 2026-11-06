@@ -60,7 +60,7 @@ export default function LoginPage() {
           </form>
 
           <div className="signup-link">
-            Ainda não tem conta? <a href="#">Cadastre-se</a>
+            Ainda não tem conta? <a href="/cadastro">Cadastre-se</a>
           </div>
 
         </div>
