@@ -20,27 +20,16 @@ export default function Cabecalho() {
 
   return (
     <header className="cabecalho">
-      <div className="container">
-        <Link href="/vagas" className="marca">JobMatch</Link>
-        <nav className="nav" aria-label="Principal">
-          <ItemMenu href="/vagas">Vagas</ItemMenu>
-          {ehCandidato && <ItemMenu href="/favoritos">Favoritas</ItemMenu>}
-          {ehRecrutador && <ItemMenu href="/empresa/vagas" exato>Minhas vagas</ItemMenu>}
-          {ehRecrutador && <ItemMenu href="/empresa/vagas/nova" exato>Nova vaga</ItemMenu>}
-        </nav>
-        {usuario ? (
-          <div className="usuario-menu">
-            <span className="avatar" aria-hidden="true">{iniciais(usuario.nome)}</span>
-            <span>
-              <strong>{usuario.nome}</strong>
-              {usuario.empresaNome && <span className="texto-2"> · {usuario.empresaNome}</span>}
-            </span>
-            <button type="button" className="botao neutro pequeno" onClick={() => { sair(); router.push('/vagas'); }}>Sair</button>
-          </div>
-        ) : (
-          <Link href="/login" className="botao secundario pequeno">Entrar</Link>
-        )}
-      </div>
-    </header>
+        <Link href="#" className="jobmatch">JobMatch</Link>
+        <div className="cabecalho-btn">
+          <Link href="/vagas">Vagas</Link>
+          <Link href="">Empresas</Link>
+          <Link href="">Para empresas</Link>
+        </div>
+        <div className="btn-login">
+          <Link href="/login" className="entrar">Entrar</Link>
+          <Link href="/cadastro" className="cadastrar">Cadastrar</Link>
+        </div>
+      </header>
   );
 }

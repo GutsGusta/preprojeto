@@ -11,18 +11,6 @@ export default function Home() {
 
   return (
     <>
-      <div className="cabecalho">
-        <h3>JobMatch</h3>
-        <div className="cabecalho-btn">
-          <Link href="/vagas">Vagas</Link>
-          <Link href="">Empresas</Link>
-          <Link href="">Para empresas</Link>
-        </div>
-        <div className="btn-login">
-          <Link href="./login" className="entrar">Entrar</Link>
-          <Link href="" className="cadastrar">Cadastrar</Link>
-        </div>
-      </div>
       <main>
         <div className="texto">
           <h1>Encontre a vaga certa para você</h1>

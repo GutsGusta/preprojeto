@@ -1,5 +1,6 @@
 import "./globals.css";
 import { AuthProvider } from './_lib/AuthContext';
+import Cabecalho from "./_components/Cabecalho";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css"; 
 
@@ -29,7 +30,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <AuthProvider>
-         
+         <Cabecalho/>
           {children}
         </AuthProvider>
       </body>
