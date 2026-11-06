@@ -92,3 +92,33 @@ export async function relatorioCandidaturas(req, res, next) {
       next(erro);
   }
 }
+
+export async function listarVagasEmpresa(req, res, next) {
+  try {
+    const { id } = req.params;
+
+    if (!/^[1-9]\d*$/.test(id)) {
+      return res.status(400).json({
+        erro: "ID da empresa inválido"
+      });
+    }
+
+    const [vagas] = await pool.query(
+      `SELECT
+        id_vaga AS id,
+        titulo,
+        status,
+        modalidade,
+        cidade,
+        uf
+      FROM vaga
+      WHERE empresa_id = ?
+      ORDER BY id_vaga DESC`,
+      [id]
+    );
+
+    return res.json(vagas);
+  } catch (erro) {
+    next(erro);
+  }
+}
