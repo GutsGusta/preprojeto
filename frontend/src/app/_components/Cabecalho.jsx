@@ -27,8 +27,17 @@ export default function Cabecalho() {
           <Link href="">Para empresas</Link>
         </div>
         <div className="btn-login">
-          <Link href="/login" className="entrar">Entrar</Link>
-          <Link href="/cadastro" className="cadastrar">Cadastrar</Link>
+          {usuario ? (
+            <>
+              <span>{usuario.nome}</span>
+              <Link href="/" className="entrar" onClick={sair}>Sair</Link>
+            </>
+          ) : (
+            <>
+              <Link href="/login" className="entrar">Entrar</Link>
+              <Link href="/cadastro" className="cadastrar">Cadastrar</Link>
+            </>
+          )}
         </div>
       </header>
   );

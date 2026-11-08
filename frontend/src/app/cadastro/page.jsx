@@ -1,14 +1,46 @@
 "use client";
 
 import React, { useState } from 'react';
-import './cadastro.css'; 
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../_lib/AuthContext';
+import { authApi } from '../_lib/servicos';
+import './cadastro.css';
 
 export default function Cadastro() {
+  const router = useRouter();
+  const { entrar } = useAuth();
   const [activeTab, setActiveTab] = useState('candidato');
+  const [campos, setCampos] = useState({
+    email: '', senha: '', cidade: '', uf: '',
+    nome: '', cpf: '', dataNascimento: '', telefone: '',
+    razaoSocial: '', nomeFantasia: '', cnpj: '', setor: '', site: '',
+  });
+  const [erro, setErro] = useState('');
+  const [enviando, setEnviando] = useState(false);
+
+  function mudarCampo(evento) {
+    setCampos({ ...campos, [evento.target.name]: evento.target.value });
+  }
+
+  async function enviarCadastro(evento) {
+    evento.preventDefault();
+    setErro('');
+    setEnviando(true);
+
+    try {
+      await authApi.cadastrar({ ...campos, tipo: activeTab });
+      const usuario = await entrar(campos.email, campos.senha);
+      router.push(usuario.perfil === 'RECRUTADOR' ? '/empresa/vagas' : '/');
+    } catch (falha) {
+      setErro(falha.message);
+    } finally {
+      setEnviando(false);
+    }
+  }
 
   return (
-    <div className="login-page">
-      <div className="sidebar">
+    <div className="pagina-login">
+      <div className="painel-lateral">
         <div>
           <h1>JobMatch</h1>
           <h2>
@@ -20,19 +52,19 @@ export default function Cadastro() {
         </div>
       </div>
 
-      <div className="main-content">
-        <div className="login-box" style={{ maxHeight: '90vh', overflowY: 'auto' }}>
-          
-          <div className="tabs">
-            <button 
+      <div className="conteudo-principal">
+        <div className="caixa-login" style={{ maxHeight: '90vh', overflowY: 'auto' }}>
+
+          <div className="abas">
+            <button
               onClick={() => setActiveTab('candidato')}
-              className={activeTab === 'candidato' ? 'active' : ''}
+              className={activeTab === 'candidato' ? 'ativa' : ''}
             >
               Candidato
             </button>
-            <button 
+            <button
               onClick={() => setActiveTab('empresa')}
-              className={activeTab === 'empresa' ? 'active' : ''}
+              className={activeTab === 'empresa' ? 'ativa' : ''}
             >
               Empresa
             </button>
@@ -42,78 +74,80 @@ export default function Cadastro() {
             {activeTab === 'candidato' ? 'Cadastro de Candidato' : 'Cadastro de Empresa'}
           </h3>
 
-          <form>
-            <div className="input-group">
+          <form onSubmit={enviarCadastro}>
+            {erro && <p className="mensagem-erro">{erro}</p>}
+
+            <div className="grupo-campo">
               <label>E-mail</label>
-              <input type="email" placeholder="voce@email.com" required />
+              <input type="email" name="email" placeholder="voce@email.com" value={campos.email} onChange={mudarCampo} required />
             </div>
 
-            <div className="input-group">
+            <div className="grupo-campo">
               <label>Senha</label>
-              <input type="password" placeholder="Crie uma senha forte" required />
+              <input type="password" name="senha" placeholder="Crie uma senha forte" minLength={8} value={campos.senha} onChange={mudarCampo} required />
             </div>
 
             {activeTab === 'candidato' ? (
               <>
-                <div className="input-group">
+                <div className="grupo-campo">
                   <label>Nome Completo</label>
-                  <input type="text" placeholder="Seu nome completo" required />
+                  <input type="text" name="nome" placeholder="Seu nome completo" value={campos.nome} onChange={mudarCampo} required />
                 </div>
-                <div className="input-group">
+                <div className="grupo-campo">
                   <label>CPF</label>
-                  <input type="text" placeholder="000.000.000-00" required />
+                  <input type="text" name="cpf" placeholder="000.000.000-00" value={campos.cpf} onChange={mudarCampo} required />
                 </div>
-                <div className="input-group">
+                <div className="grupo-campo">
                   <label>Data de Nascimento</label>
-                  <input type="date" required />
+                  <input type="date" name="dataNascimento" value={campos.dataNascimento} onChange={mudarCampo} required />
                 </div>
-                <div className="input-group">
+                <div className="grupo-campo">
                   <label>Telefone</label>
-                  <input type="text" placeholder="(00) 00000-0000" required />
+                  <input type="text" name="telefone" placeholder="(00) 00000-0000" value={campos.telefone} onChange={mudarCampo} required />
                 </div>
               </>
             ) : (
               <>
-                <div className="input-group">
+                <div className="grupo-campo">
                   <label>Razão Social</label>
-                  <input type="text" placeholder="Razão Social da Empresa" required />
+                  <input type="text" name="razaoSocial" placeholder="Razão Social da Empresa" value={campos.razaoSocial} onChange={mudarCampo} required />
                 </div>
-                <div className="input-group">
+                <div className="grupo-campo">
                   <label>Nome Fantasia</label>
-                  <input type="text" placeholder="Nome Fantasia" required />
+                  <input type="text" name="nomeFantasia" placeholder="Nome Fantasia" value={campos.nomeFantasia} onChange={mudarCampo} required />
                 </div>
-                <div className="input-group">
+                <div className="grupo-campo">
                   <label>CNPJ</label>
-                  <input type="text" placeholder="00.000.000/0000-00" required />
+                  <input type="text" name="cnpj" placeholder="00.000.000/0000-00" value={campos.cnpj} onChange={mudarCampo} required />
                 </div>
-                <div className="input-group">
+                <div className="grupo-campo">
                   <label>Setor</label>
-                  <input type="text" placeholder="Ex: Tecnologia, Saúde..." required />
+                  <input type="text" name="setor" placeholder="Ex: Tecnologia, Saúde..." value={campos.setor} onChange={mudarCampo} required />
                 </div>
-                <div className="input-group">
+                <div className="grupo-campo">
                   <label>Site</label>
-                  <input type="url" placeholder="https://www.suaempresa.com" />
+                  <input type="url" name="site" placeholder="https://www.suaempresa.com" value={campos.site} onChange={mudarCampo} />
                 </div>
               </>
             )}
 
             <div style={{ display: 'flex', gap: '10px' }}>
-              <div className="input-group" style={{ flex: 2 }}>
+              <div className="grupo-campo" style={{ flex: 2 }}>
                 <label>Cidade</label>
-                <input type="text" placeholder="Sua cidade" required />
+                <input type="text" name="cidade" placeholder="Sua cidade" value={campos.cidade} onChange={mudarCampo} required />
               </div>
-              <div className="input-group" style={{ flex: 1 }}>
+              <div className="grupo-campo" style={{ flex: 1 }}>
                 <label>UF</label>
-                <input type="text" placeholder="Ex: SP" maxLength="2" required />
+                <input type="text" name="uf" placeholder="Ex: SP" maxLength="2" value={campos.uf} onChange={mudarCampo} required />
               </div>
             </div>
 
-            <button type="submit" style={{ marginTop: '1rem' }}>
-              Criar Conta
+            <button type="submit" style={{ marginTop: '1rem' }} disabled={enviando}>
+              {enviando ? 'Criando conta...' : 'Criar Conta'}
             </button>
           </form>
 
-          <div className="signup-link">
+          <div className="link-conta">
             Já tem uma conta? <a href="/login">Entrar</a>
           </div>
 

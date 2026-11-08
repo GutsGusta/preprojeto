@@ -1,9 +1,10 @@
-const { Router } = require('express');
-const { autenticar } = require('../middlewares/auth');
-const authController = require('../controllers/authController');
+import { Router } from "express";
+import { cadastrar, entrar, eu } from "../controllers/authController.js";
 
-const rotas = Router();
-rotas.post('/login', authController.login);
-rotas.get('/me', autenticar, authController.eu);
+const router = Router();
 
-module.exports = rotas;
+router.post("/cadastro", cadastrar);
+router.post("/login", entrar);
+router.get("/me", eu);
+
+export default router;

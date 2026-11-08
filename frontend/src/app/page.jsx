@@ -15,7 +15,17 @@ export default function Home() {
         <div className="texto">
           <h1>Encontre a vaga certa para você</h1>
           <p>Busque entre vagas de empresas cadastradas e acompanhe cada etapa da sua candidatura.</p>
-          {/* <div></div> aqui fica uma pesquisa */}
+          <form className="pesquisa" action="/vagas">
+            <div className="pesquisa-campo">
+              <label htmlFor="pesquisa-cargo">Cargo ou palavra-chave</label>
+              <input id="pesquisa-cargo" type="text" name="q" placeholder="Ex.: desenvolvedor front-end" />
+            </div>
+            <div className="pesquisa-campo">
+              <label htmlFor="pesquisa-cidade">Cidade</label>
+              <input id="pesquisa-cidade" type="text" name="cidade" placeholder="Ex.: Santo André" />
+            </div>
+            <button type="submit" className="btn-pesquisar">Buscar vagas</button>
+          </form>
         </div>  
         <div className="pagina">
           <div className="">

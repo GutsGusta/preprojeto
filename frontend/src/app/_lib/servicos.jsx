@@ -38,4 +38,5 @@ export const habilidadesApi = {
 export const authApi = {
   login: (email, senha) => api('/auth/login', { metodo: 'POST', corpo: { email, senha } }),
   eu: () => api('/auth/me'),
+  cadastrar: (dados) => api('/auth/cadastro', { metodo: 'POST', corpo: dados }),
 };
