@@ -54,6 +54,10 @@ main {
 }
 
 .card-vaga {
+  display: flex;
+  align-items: start;
+  justify-content: start;
+  flex-direction: column;
   border: solid 1px #cacaca;
   border-radius: 20px;
   width: 400px;
@@ -79,6 +83,30 @@ main {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+}
+
+.tags-vaga {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.tags-vaga .separador {
+  color: #aaa;
+  font-weight: bold;
+}
+
+.descricao-vaga {
+  max-height: 70px;
+  overflow: hidden;
+  margin: 0;
+  color: #555;
+  line-height: 1.5;
+  -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
 }
 
 .sou-algo {

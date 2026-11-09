@@ -31,42 +31,67 @@ export default function Home() {
           <div className="">
             <div className="txt-vagas">
               <h3>Vagas recentes</h3>
-              <Link className="btn-vagas " href="">Ver todas</Link> 
+              <Link className="btn-vagas" href="/vagas">Ver todas</Link> 
             </div>
             <div className="vagas">
-              <article className="card-vaga">
-              <div className="txt-detalhe">
-                <img src="/icon-exemplo.png"/>
-                <div className="txt-nome">
-                  <h3>Título vaga</h3>
-                  <p>Empresa</p>
-                </div>
-              </div>
-              {/* <p>Tags com cidade, tipo de emprego e tipo de vaga</p> */}
-              <p>Descrição</p>
-            </article>
-            <article className="card-vaga">
-              <div className="txt-detalhe">
-                <img src="/icon-exemplo.png"/>
-                <div className="txt-nome">
-                  <h3>Título vaga</h3>
-                  <p>Empresa</p>
-                </div>
-              </div>
-              {/* <p>Tags com cidade, tipo de emprego e tipo de vaga</p> */}
-              <p>Descrição</p>
-            </article>
-            <article className="card-vaga">
-              <div className="txt-detalhe">
-                <img src="/icon-exemplo.png"/>
-                <div className="txt-nome">
-                  <h3>Título vaga</h3>
-                  <p>Empresa</p>
-                </div>
-              </div>
-              {/* <p>Tags com cidade, tipo de emprego e tipo de vaga</p> */}
-              <p>Descrição</p>
-            </article>
+              <Link href="">
+                <article className="card-vaga"> 
+                  <div className="txt-detalhe">
+                    <img src="/icon-exemplo.png"/>
+                    <div className="txt-nome">
+                      <h3>Título vaga</h3>
+                      <p>Empresa</p>
+                    </div>
+                  </div>
+                  <div className="tags-vaga">
+                    <span>São Paulo, SP</span>
+                    <span className="separador">·</span>
+                    <span>Híbrido</span>
+                    <span className="separador">·</span>
+                    <span>CLT</span>
+                  </div>
+                <p className="descricao-vaga">Descrição de Vaga</p>
+                </article>
+              </Link>
+              <Link href="">
+                <article className="card-vaga">
+                  <div className="txt-detalhe">
+                    <img src="/icon-exemplo.png"/>
+                    <div className="txt-nome">
+                      <h3>Título vaga</h3>
+                      <p>Empresa</p>
+                    </div>
+                  </div>
+                    <div className="tags-vaga">
+                      <span>São Paulo, SP</span>
+                      <span className="separador">·</span>
+                      <span>Híbrido</span>
+                      <span className="separador">·</span>
+                      <span>CLT</span>
+                    </div>
+                  <p>Descrição</p>
+                </article>
+              </Link>
+              <Link href="">
+                <article className="card-vaga">
+                  <div className="txt-detalhe">
+                    <img src="/icon-exemplo.png"/>
+                    <div className="txt-nome">
+                      <h3>Título vaga</h3>
+                      <p>Empresa</p>
+                    </div>
+                  </div>
+                  <div className="tags-vaga">
+                    <span>São Paulo, SP</span>
+                    <span className="separador">·</span>
+                    <span>Híbrido</span>
+                    <span className="separador">·</span>
+                    <span>CLT</span>
+                  </div>
+                  <p>Descrição</p>
+                </article>
+              </Link>
+              
             </div>
             
           </div>

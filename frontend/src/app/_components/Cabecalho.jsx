@@ -20,7 +20,7 @@ export default function Cabecalho() {
 
   return (
     <header className="cabecalho">
-        <Link href="#" className="jobmatch">JobMatch</Link>
+        <Link href="/ " className="jobmatch">JobMatch</Link>
         <div className="cabecalho-btn">
           <Link href="/vagas">Vagas</Link>
           <Link href="">Empresas</Link>
