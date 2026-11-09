@@ -17,32 +17,46 @@ export default function AdminDashboard() {
     ];
 
     const [usuarios, setUsuarios] = useState([]);
+    const [carregandoUsuarios, setCarregandoUsuarios] = useState(true);
+    const [erroUsuarios, setErroUsuarios] = useState("");
     const [usuarioSelecionado, setUsuarioSelecionado] = useState(null);
     const [empresas, setEmpresas] = useState([]);
+    const [carregandoEmpresas, setCarregandoEmpresas] = useState(true);
+    const [erroEmpresas, setErroEmpresas] = useState("");
     const [empresaSelecionada, setEmpresaSelecionada] = useState(null);
     const [vagasEmpresa, setVagasEmpresa] = useState([]);
     const [carregandoVagas, setCarregandoVagas] = useState(false);
     const [erroVagas, setErroVagas] = useState("");
     const [relatorioCandidaturas, setRelatorioCandidaturas] = useState([]);
+    const [carregandoRelatorio, setCarregandoRelatorio] = useState(true);
+    const [erroRelatorio, setErroRelatorio] = useState("");
     const [buscaEmpresa, setBuscaEmpresa] = useState("");
 
     useEffect(() => {
+
         async function carregarUsuarios() {
+            setCarregandoUsuarios(true);
+            setErroUsuarios("");
+
             try {
                 const resposta = await fetch(
                     `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"}/admin/usuarios`
                 );
 
                 if (!resposta.ok) {
-                    throw new Error("Erro ao buscar usuários");
+                    throw new Error("Não foi possível carregar os usuários.");
                 }
 
                 const dados = await resposta.json();
                 setUsuarios(dados);
             } catch (erro) {
-                console.error("Erro ao carregar usuários:", erro);
+                setErroUsuarios("Erro ao carregar usuários. Verifique a conexão com o servidor.");
+                setUsuarios([]);
+            } finally {
+                setCarregandoUsuarios(false);
             }
         }
+
 
         carregarUsuarios();
     }, []);
@@ -66,19 +80,25 @@ export default function AdminDashboard() {
 
     useEffect(() => {
         async function carregarRelatorioCandidaturas() {
+            setCarregandoRelatorio(true);
+            setErroRelatorio("");
+
             try {
                 const resposta = await fetch(
                     `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"}/admin/relatorios/candidaturas`
                 );
 
                 if (!resposta.ok) {
-                    throw new Error("Erro ao carregar relatório de candidaturas");
+                    throw new Error("Erro ao carregar relatório");
                 }
 
                 const dados = await resposta.json();
                 setRelatorioCandidaturas(dados);
             } catch (erro) {
-                console.error("Erro ao carregar relatório:", erro);
+                setErroRelatorio("Erro ao carregar relatório. Verifique a conexão com o servidor.");
+                setRelatorioCandidaturas([]);
+            } finally {
+                setCarregandoRelatorio(false);
             }
         }
 
@@ -86,22 +106,30 @@ export default function AdminDashboard() {
     }, []);
 
     useEffect(() => {
+
         async function carregarEmpresas() {
+            setCarregandoEmpresas(true);
+            setErroEmpresas("");
+
             try {
                 const resposta = await fetch(
                     `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"}/admin/empresas`
                 );
 
                 if (!resposta.ok) {
-                    throw new Error("Erro ao buscar empresas");
+                    throw new Error("Não foi possível carregar as empresas.");
                 }
 
                 const dados = await resposta.json();
                 setEmpresas(dados);
             } catch (erro) {
-                console.error("Erro ao carregar empresas:", erro);
+                setErroEmpresas("Erro ao carregar empresas. Verifique a conexão com o servidor.");
+                setEmpresas([]);
+            } finally {
+                setCarregandoEmpresas(false);
             }
         }
+
 
         carregarEmpresas();
     }, []);
@@ -201,19 +229,29 @@ export default function AdminDashboard() {
 
                     {pagina === "Visão geral" ? (
                         <>
-                            <section className={styles.indicadores}>
-                                {[
-                                    ["Candidatos", resumo.candidatos],
-                                    ["Empresas", resumo.empresas],
-                                    ["Vagas abertas", resumo.vagasAbertas],
-                                    ["Candidaturas", resumo.totalCandidaturas]
-                                ].map(([titulo, valor]) => (
-                                    <div className={styles.card} key={titulo}>
-                                        <p>{titulo}</p>
-                                        <h2>{valor}</h2>
-                                    </div>
-                                ))}
-                            </section>
+                            {carregando && <p>Carregando indicadores...</p>}
+
+                            {erro && (
+                                <p style={{ color: "red" }}>
+                                    Erro ao carregar indicadores. Verifique a conexão com o servidor.
+                                </p>
+                            )}
+
+                            {!carregando && !erro && (
+                                <section className={styles.indicadores}>
+                                    {[
+                                        ["Candidatos", resumo.candidatos],
+                                        ["Empresas", resumo.empresas],
+                                        ["Vagas abertas", resumo.vagasAbertas],
+                                        ["Candidaturas", resumo.totalCandidaturas]
+                                    ].map(([titulo, valor]) => (
+                                        <div className={styles.card} key={titulo}>
+                                            <p>{titulo}</p>
+                                            <h2>{valor}</h2>
+                                        </div>
+                                    ))}
+                                </section>
+                            )}
 
                             <section className={styles.painel}>
                                 <div className={styles.painelHeader}>
@@ -225,33 +263,37 @@ export default function AdminDashboard() {
                                     />
                                 </div>
 
-                                <div className={styles.tableWrapper}>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Nome</th>
-                                                <th>Perfil</th>
-                                                <th>Situação</th>
-                                                <th>Ações</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {usuariosFiltrados.map((usuario) => (
-                                                <tr key={usuario.email}>
-                                                    <td>{usuario.nome} - {usuario.email}</td>
-                                                    <td>{usuario.perfil}</td>
-                                                    <td>{usuario.ativo ? "Ativo" : "Bloqueado"}</td>
-                                                    <td><button
-                                                        type="button"
-                                                        onClick={() => setUsuarioSelecionado(usuario)}
-                                                    >
-                                                        Gerenciar
-                                                    </button></td>
+                                {carregandoUsuarios && <p>Carregando usuários...</p>}
+                                {erroUsuarios && <p style={{ color: "red" }}>{erroUsuarios}</p>}
+
+                                {!carregandoUsuarios && !erroUsuarios && (
+                                    <div className={styles.tableWrapper}>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Nome</th>
+                                                    <th>Perfil</th>
+                                                    <th>Situação</th>
+                                                    <th>Ações</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            </thead>
+                                            <tbody>
+                                                {usuariosFiltrados.map((usuario) => (
+                                                    <tr key={usuario.email}>
+                                                        <td>{usuario.nome} - {usuario.email}</td>
+                                                        <td>{usuario.perfil}</td>
+                                                        <td>{usuario.ativo ? "Ativo" : "Bloqueado"}</td>
+                                                        <td>
+                                                            <button type="button" onClick={() => setUsuarioSelecionado(usuario)}>
+                                                                Gerenciar
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
                             </section>
                         </>
                     ) : pagina === "Usuários" ? (
@@ -267,6 +309,14 @@ export default function AdminDashboard() {
                             </div>
 
                             <p>Consulte os usuários cadastrados na plataforma.</p>
+
+                            {carregandoUsuarios && (
+                                <p>Carregando usuários...</p>
+                            )}
+
+                            {erroUsuarios && (
+                                <p style={{ color: "red" }}>{erroUsuarios}</p>
+                            )}
 
                             <div className={styles.filtros}>
                                 <select
@@ -323,9 +373,11 @@ export default function AdminDashboard() {
                                     </tbody>
                                 </table>
 
-                                {usuariosFiltrados.length === 0 && (
-                                    <p>Nenhum usuário encontrado.</p>
-                                )}
+                                {!carregandoUsuarios &&
+                                    !erroUsuarios &&
+                                    usuariosFiltrados.length === 0 && (
+                                        <p>Nenhum usuário encontrado.</p>
+                                    )}
                             </div>
                         </section>
                     ) : pagina === "Empresas" ? (
@@ -343,55 +395,65 @@ export default function AdminDashboard() {
 
                             <p>Consulte as empresas cadastradas na plataforma.</p>
 
-                            <div className={styles.tableWrapper}>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Empresa</th>
-                                            <th>CNPJ</th>
-                                            <th>Setor</th>
-                                            <th>Localização</th>
-                                            <th>Ações</th>
-                                        </tr>
-                                    </thead>
+                            {carregandoEmpresas && (
+                                <p>Carregando empresas...</p>
+                            )}
 
-                                    <tbody>
-                                        {empresas
-                                            .filter((empresa) => {
-                                                const pesquisa = buscaEmpresa.toLowerCase().trim();
+                            {erroEmpresas && (
+                                <p style={{ color: "red" }}>{erroEmpresas}</p>
+                            )}
 
-                                                return (
-                                                    String(empresa.nome ?? "")
-                                                        .toLowerCase()
-                                                        .includes(pesquisa) ||
-                                                    String(empresa.cnpj ?? "")
-                                                        .toLowerCase()
-                                                        .includes(pesquisa)
-                                                );
-                                            })
-                                            .map((empresa) => (
-                                                <tr key={empresa.id}>
-                                                    <td>{empresa.nome}</td>
-                                                    <td>{empresa.cnpj}</td>
-                                                    <td>{empresa.setor || "Não informado"}</td>
-                                                    <td>
-                                                        {[empresa.cidade, empresa.uf]
-                                                            .filter(Boolean)
-                                                            .join(" - ") || "Não informado"}
-                                                    </td>
-                                                    <td>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setEmpresaSelecionada(empresa)}
-                                                        >
-                                                            Gerenciar
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                            {!carregandoEmpresas && !erroEmpresas && (
+                                <div className={styles.tableWrapper}>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Empresa</th>
+                                                <th>CNPJ</th>
+                                                <th>Setor</th>
+                                                <th>Localização</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {empresas
+                                                .filter((empresa) => {
+                                                    const pesquisa = buscaEmpresa.toLowerCase().trim();
+
+                                                    return (
+                                                        String(empresa.nome ?? "")
+                                                            .toLowerCase()
+                                                            .includes(pesquisa) ||
+                                                        String(empresa.cnpj ?? "")
+                                                            .toLowerCase()
+                                                            .includes(pesquisa)
+                                                    );
+                                                })
+                                                .map((empresa) => (
+                                                    <tr key={empresa.id}>
+                                                        <td>{empresa.nome}</td>
+                                                        <td>{empresa.cnpj}</td>
+                                                        <td>{empresa.setor || "Não informado"}</td>
+                                                        <td>
+                                                            {[empresa.cidade, empresa.uf]
+                                                                .filter(Boolean)
+                                                                .join(" - ") || "Não informado"}
+                                                        </td>
+                                                        <td>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => setEmpresaSelecionada(empresa)}
+                                                            >
+                                                                Gerenciar
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
                         </section>
                     ) : pagina === "Relatórios gerais" ? (
                         <>
@@ -412,13 +474,19 @@ export default function AdminDashboard() {
                             <section className={styles.painel}>
                                 <h2>Candidaturas por status</h2>
 
+                                {carregandoRelatorio && <p>Carregando relatório...</p>}
+
+                                {erroRelatorio && (
+                                    <p style={{ color: "red" }}>{erroRelatorio}</p>
+                                )}
+
                                 <p>
                                     Distribuição das candidaturas registradas
                                     na plataforma.
                                 </p>
 
                                 <div style={{ marginTop: "25px" }}>
-                                    {relatorioCandidaturas.length === 0 ? (
+                                    {carregandoRelatorio || erroRelatorio ? null : relatorioCandidaturas.length === 0 ? (
                                         <p>Nenhuma candidatura encontrada.</p>
                                     ) : (
                                         relatorioCandidaturas.map((item) => {
