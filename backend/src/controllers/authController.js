@@ -47,22 +47,52 @@ function criarToken(usuario) {
 
 // Confere se o token é verdadeiro (assinatura) e ainda está na validade.
 // Devolve os dados do usuário guardados nele, ou null se o token não servir.
-function lerToken(token) {
-  const [cabecalho, corpo, assinatura] = String(token || "").split(".");
-  if (!cabecalho || !corpo || !assinatura) return null;
+export function lerToken(token) {
+  try {
+    const partes = String(token || "").split(".");
+    if (partes.length !== 3) return null;
 
-  const esperada = crypto
-    .createHmac("sha256", segredo)
-    .update(`${cabecalho}.${corpo}`)
-    .digest();
-  const recebida = Buffer.from(assinatura, "base64url");
+    const [cabecalho, corpo, assinatura] = partes;
 
-  if (esperada.length !== recebida.length || !crypto.timingSafeEqual(esperada, recebida)) {
+    const header = JSON.parse(
+      Buffer.from(cabecalho, "base64url").toString("utf8")
+    );
+
+    if (header.alg !== "HS256" || header.typ !== "JWT") {
+      return null;
+    }
+
+    const esperada = crypto
+      .createHmac("sha256", segredo)
+      .update(`${cabecalho}.${corpo}`)
+      .digest();
+
+    const recebida = Buffer.from(assinatura, "base64url");
+
+    if (
+      esperada.length !== recebida.length ||
+      !crypto.timingSafeEqual(esperada, recebida)
+    ) {
+      return null;
+    }
+
+    const dados = JSON.parse(
+      Buffer.from(corpo, "base64url").toString("utf8")
+    );
+
+    if (
+      !dados ||
+      typeof dados.id !== "number" ||
+      typeof dados.exp !== "number" ||
+      dados.exp <= Date.now() / 1000
+    ) {
+      return null;
+    }
+
+    return dados;
+  } catch {
     return null;
   }
-
-  const dados = JSON.parse(Buffer.from(corpo, "base64url").toString());
-  return dados.exp > Date.now() / 1000 ? dados : null;
 }
 
 // POST /api/auth/cadastro
@@ -183,7 +213,7 @@ export async function entrar(req, res, next) {
 
     // Busca o usuário e os dados dele (que ficam nas tabelas candidato, recrutador e empresa)
     const [linhas] = await pool.query(
-      `SELECT u.id_usuario, u.email, u.senha_hash, u.perfil, u.ativo,
+      `SELECT u.id_usuario, u.email, u.senha_hash, u.perfil, u.ativo, u.excluido_em,
               c.id_candidato, c.nome AS nome_candidato,
               r.id_recrutador, r.nome AS nome_recrutador, r.empresa_id,
               e.nome_fantasia AS empresa_nome
@@ -201,8 +231,16 @@ export async function entrar(req, res, next) {
       return res.status(401).json({ mensagem: "E-mail ou senha incorretos." });
     }
 
+    if (linha.excluido_em !== null) {
+      return res.status(403).json({
+        mensagem: "Esta conta foi excluída."
+      });
+    }
+
     if (!linha.ativo) {
-      return res.status(403).json({ mensagem: "Esta conta está bloqueada." });
+      return res.status(403).json({
+        mensagem: "Esta conta está bloqueada."
+      });
     }
 
     const usuario = {
@@ -225,14 +263,54 @@ export async function entrar(req, res, next) {
 // GET /api/auth/me
 // Devolve o usuário do token enviado. O frontend usa isso ao abrir o site,
 // para saber se a pessoa continua logada.
-export function eu(req, res) {
-  const token = (req.headers.authorization || "").replace("Bearer ", "");
-  const dados = lerToken(token);
 
-  if (!dados) {
-    return res.status(401).json({ mensagem: "Sessão inválida ou expirada." });
+export async function eu(req, res, next) {
+  try {
+    const authorization = req.headers.authorization || "";
+    const correspondencia = authorization.match(/^Bearer (.+)$/i);
+
+    if (!correspondencia) {
+      return res.status(401).json({
+        mensagem: "Sessão inválida ou expirada."
+      });
+    }
+
+    const dados = lerToken(correspondencia[1]);
+
+    if (!dados) {
+      return res.status(401).json({
+        mensagem: "Sessão inválida ou expirada."
+      });
+    }
+
+    const [linhas] = await pool.query(
+      `SELECT id_usuario, email, perfil, ativo, excluido_em
+       FROM usuario
+       WHERE id_usuario = ?`,
+      [dados.id]
+    );
+
+    const conta = linhas[0];
+
+    if (!conta || !conta.ativo || conta.excluido_em !== null) {
+      return res.status(401).json({
+        mensagem: "Esta conta não está mais autorizada."
+      });
+    }
+
+    // Impede que um token antigo mantenha permissões alteradas
+    if (conta.perfil !== dados.perfil) {
+      return res.status(401).json({
+        mensagem: "As permissões da conta foram alteradas. Entre novamente."
+      });
+    }
+
+    const { exp, ...usuario } = dados;
+
+    return res.json({ usuario });
+
+  } catch (erro) {
+    next(erro);
   }
-
-  const { exp, ...usuario } = dados;
-  return res.json({ usuario });
 }
+
