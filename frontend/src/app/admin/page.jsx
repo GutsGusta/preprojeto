@@ -1,9 +1,24 @@
 "use client";
 
+import { api } from "../_lib/api";
 import { useEffect, useState } from "react";
 import styles from "./admin.module.css";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../_lib/AuthContext";
 
 export default function AdminDashboard() {
+    const router = useRouter();
+    const { usuario, carregando: carregandoAuth, ehAdmin } = useAuth();
+
+    useEffect(() => {
+        if (carregandoAuth) return;
+
+        if (!usuario) {
+            router.replace("/login?voltar=/admin");
+        } else if (!ehAdmin) {
+            router.replace("/");
+        }
+    }, [usuario, carregandoAuth, ehAdmin, router]);
     const [pagina, setPagina] = useState("Visão geral");
     const [busca, setBusca] = useState("");
     const [filtroPerfil, setFiltroPerfil] = useState("Todos");
@@ -20,6 +35,9 @@ export default function AdminDashboard() {
     const [carregandoUsuarios, setCarregandoUsuarios] = useState(true);
     const [erroUsuarios, setErroUsuarios] = useState("");
     const [usuarioSelecionado, setUsuarioSelecionado] = useState(null);
+    const [processandoUsuario, setProcessandoUsuario] = useState(false);
+    const [erroGerenciamento, setErroGerenciamento] = useState("");
+    const [confirmandoExclusao, setConfirmandoExclusao] = useState(false);
     const [empresas, setEmpresas] = useState([]);
     const [carregandoEmpresas, setCarregandoEmpresas] = useState(true);
     const [erroEmpresas, setErroEmpresas] = useState("");
@@ -32,22 +50,16 @@ export default function AdminDashboard() {
     const [erroRelatorio, setErroRelatorio] = useState("");
     const [buscaEmpresa, setBuscaEmpresa] = useState("");
 
+
     useEffect(() => {
+        if (carregandoAuth || !ehAdmin) return;
 
         async function carregarUsuarios() {
             setCarregandoUsuarios(true);
             setErroUsuarios("");
 
             try {
-                const resposta = await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"}/admin/usuarios`
-                );
-
-                if (!resposta.ok) {
-                    throw new Error("Não foi possível carregar os usuários.");
-                }
-
-                const dados = await resposta.json();
+                const dados = await api("/admin/usuarios");
                 setUsuarios(dados);
             } catch (erro) {
                 setErroUsuarios("Erro ao carregar usuários. Verifique a conexão com o servidor.");
@@ -59,7 +71,7 @@ export default function AdminDashboard() {
 
 
         carregarUsuarios();
-    }, []);
+    }, [carregandoAuth, ehAdmin]);
 
     const usuariosFiltrados = usuarios.filter((usuario) => {
         const correspondeBusca =
@@ -78,21 +90,16 @@ export default function AdminDashboard() {
         return correspondeBusca && correspondePerfil && correspondeSituacao;
     });
 
+
     useEffect(() => {
+        if (carregandoAuth || !ehAdmin) return;
+
         async function carregarRelatorioCandidaturas() {
             setCarregandoRelatorio(true);
             setErroRelatorio("");
 
             try {
-                const resposta = await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"}/admin/relatorios/candidaturas`
-                );
-
-                if (!resposta.ok) {
-                    throw new Error("Erro ao carregar relatório");
-                }
-
-                const dados = await resposta.json();
+                const dados = await api("/admin/relatorios/candidaturas");
                 setRelatorioCandidaturas(dados);
             } catch (erro) {
                 setErroRelatorio("Erro ao carregar relatório. Verifique a conexão com o servidor.");
@@ -103,27 +110,23 @@ export default function AdminDashboard() {
         }
 
         carregarRelatorioCandidaturas();
-    }, []);
+    }, [carregandoAuth, ehAdmin]);
+
 
     useEffect(() => {
+        if (carregandoAuth || !ehAdmin) return;
 
         async function carregarEmpresas() {
             setCarregandoEmpresas(true);
             setErroEmpresas("");
 
             try {
-                const resposta = await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"}/admin/empresas`
-                );
-
-                if (!resposta.ok) {
-                    throw new Error("Não foi possível carregar as empresas.");
-                }
-
-                const dados = await resposta.json();
+                const dados = await api("/admin/empresas");
                 setEmpresas(dados);
             } catch (erro) {
-                setErroEmpresas("Erro ao carregar empresas. Verifique a conexão com o servidor.");
+                setErroEmpresas(
+                    "Erro ao carregar empresas. Verifique a conexão com o servidor."
+                );
                 setEmpresas([]);
             } finally {
                 setCarregandoEmpresas(false);
@@ -132,7 +135,7 @@ export default function AdminDashboard() {
 
 
         carregarEmpresas();
-    }, []);
+    }, [carregandoAuth, ehAdmin]);
 
     const [resumo, setResumo] = useState({
         candidatos: 0,
@@ -144,18 +147,12 @@ export default function AdminDashboard() {
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState("");
 
+
     useEffect(() => {
+        if (carregandoAuth || !ehAdmin) return;
         async function carregarResumo() {
             try {
-                const resposta = await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"}/admin/resumo`
-                );
-
-                if (!resposta.ok) {
-                    throw new Error("Não foi possível carregar os indicadores.");
-                }
-
-                const dados = await resposta.json();
+                const dados = await api("/admin/resumo");
                 setResumo(dados);
             } catch (error) {
                 setErro(error.message);
@@ -165,9 +162,10 @@ export default function AdminDashboard() {
         }
 
         carregarResumo();
-    }, []);
+    }, [carregandoAuth, ehAdmin]);
 
     useEffect(() => {
+        if (carregandoAuth || !ehAdmin) return;
         if (!empresaSelecionada) {
             setVagasEmpresa([]);
             setErroVagas("");
@@ -180,15 +178,11 @@ export default function AdminDashboard() {
             setVagasEmpresa([]);
 
             try {
-                const resposta = await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"}/admin/empresas/${empresaSelecionada.id}/vagas`
+                const dados = await api(
+                    `/admin/empresas/${empresaSelecionada.id}/vagas`
                 );
 
-                if (!resposta.ok) {
-                    throw new Error("Erro ao buscar vagas da empresa");
-                }
 
-                const dados = await resposta.json();
                 setVagasEmpresa(dados);
             } catch (erro) {
                 setErroVagas(erro.message);
@@ -198,7 +192,79 @@ export default function AdminDashboard() {
         }
 
         carregarVagas();
-    }, [empresaSelecionada]);
+    }, [empresaSelecionada, carregandoAuth, ehAdmin]);
+
+
+    async function alterarSituacao(usuarioAlvo) {
+        if (processandoUsuario) return;
+
+        setProcessandoUsuario(true);
+        setErroGerenciamento("");
+
+        try {
+            const novoStatus = !Boolean(usuarioAlvo.ativo);
+
+            await api(`/admin/usuarios/${usuarioAlvo.id}/situacao`, {
+                metodo: "PATCH",
+                corpo: { ativo: novoStatus }
+            });
+
+            setUsuarios((anteriores) =>
+                anteriores.map((item) =>
+                    item.id === usuarioAlvo.id
+                        ? { ...item, ativo: novoStatus ? 1 : 0 }
+                        : item
+                )
+            );
+
+            setUsuarioSelecionado((atual) =>
+                atual?.id === usuarioAlvo.id
+                    ? { ...atual, ativo: novoStatus ? 1 : 0 }
+                    : atual
+            );
+        } catch (erro) {
+            setErroGerenciamento(
+                erro.message || "Não foi possível alterar a situação."
+            );
+        } finally {
+            setProcessandoUsuario(false);
+        }
+    }
+
+    async function excluirConta(usuarioAlvo) {
+        if (processandoUsuario) return;
+
+        setProcessandoUsuario(true);
+        setErroGerenciamento("");
+
+        try {
+            await api(`/admin/usuarios/${usuarioAlvo.id}`, {
+                metodo: "DELETE"
+            });
+
+            setUsuarios((anteriores) =>
+                anteriores.filter((item) => item.id !== usuarioAlvo.id)
+            );
+
+            setUsuarioSelecionado(null);
+            setConfirmandoExclusao(false);
+        } catch (erro) {
+            setErroGerenciamento(
+                erro.message || "Não foi possível excluir a conta."
+            );
+        } finally {
+            setProcessandoUsuario(false);
+        }
+    }
+
+
+    if (carregandoAuth) {
+        return <p>Verificando permissões...</p>;
+    }
+
+    if (!ehAdmin) {
+        return <p>Acesso não autorizado. Redirecionando...</p>;
+    }
 
     return (
         <div className={styles.container}>
@@ -558,42 +624,128 @@ export default function AdminDashboard() {
                 </main>
             </div>
 
-
             {usuarioSelecionado && (
                 <div
                     className={styles.modalOverlay}
-                    onClick={() => setUsuarioSelecionado(null)}
+                    onClick={() => {
+                        if (processandoUsuario) return;
+                        setUsuarioSelecionado(null);
+                        setConfirmandoExclusao(false);
+                        setErroGerenciamento("");
+                    }}
                 >
                     <div
                         className={styles.modal}
                         role="dialog"
                         aria-modal="true"
-                        aria-label="Detalhes do usuário"
+                        aria-label="Gerenciar usuário"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <h2>Detalhes do usuário</h2>
+                        <h2>Gerenciar usuário</h2>
 
-                        <p>
-                            <strong>Nome:</strong> {usuarioSelecionado.nome}
-                        </p>
-
-                        <p>
-                            <strong>E-mail:</strong> {usuarioSelecionado.email}
-                        </p>
-
-                        <p>
-                            <strong>Perfil:</strong> {usuarioSelecionado.perfil}
-                        </p>
-
+                        <p><strong>Nome:</strong> {usuarioSelecionado.nome}</p>
+                        <p><strong>E-mail:</strong> {usuarioSelecionado.email}</p>
+                        <p><strong>Perfil:</strong> {usuarioSelecionado.perfil}</p>
                         <p>
                             <strong>Situação:</strong>{" "}
                             {usuarioSelecionado.ativo ? "Ativo" : "Bloqueado"}
                         </p>
 
+                        {erroGerenciamento && (
+                            <p role="alert" style={{ color: "#dc2626" }}>
+                                {erroGerenciamento}
+                            </p>
+                        )}
+
+                        {usuarioSelecionado.perfil !== "ADMIN" && (
+                            <div style={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                gap: "10px",
+                                marginTop: "20px"
+                            }}>
+                                <button
+                                    type="button"
+                                    disabled={processandoUsuario || confirmandoExclusao}
+                                    onClick={() => alterarSituacao(usuarioSelecionado)}
+                                >
+                                    {usuarioSelecionado.ativo
+                                        ? "Bloquear conta"
+                                        : "Desbloquear conta"}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    disabled={processandoUsuario}
+                                    onClick={() => {
+                                        setErroGerenciamento("");
+                                        setConfirmandoExclusao(true);
+                                    }}
+                                    style={{
+                                        backgroundColor: "#dc2626",
+                                        color: "white"
+                                    }}
+                                >
+                                    Excluir conta
+                                </button>
+                            </div>
+                        )}
+
+                        {confirmandoExclusao && (
+                            <div style={{
+                                marginTop: "20px",
+                                padding: "15px",
+                                border: "1px solid #dc2626",
+                                borderRadius: "8px"
+                            }}>
+                                <p>
+                                    Tem certeza de que deseja excluir a conta de{" "}
+                                    <strong>{usuarioSelecionado.nome}</strong>?
+                                </p>
+                                <p>
+                                    A conta perderá o acesso à plataforma.
+                                    Os registros relacionados serão preservados.
+                                </p>
+
+                                <div style={{
+                                    display: "flex",
+                                    gap: "10px",
+                                    marginTop: "12px"
+                                }}>
+                                    <button
+                                        type="button"
+                                        disabled={processandoUsuario}
+                                        onClick={() => excluirConta(usuarioSelecionado)}
+                                        style={{
+                                            backgroundColor: "#dc2626",
+                                            color: "white"
+                                        }}
+                                    >
+                                        {processandoUsuario
+                                            ? "Excluindo..."
+                                            : "Confirmar exclusão"}
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        disabled={processandoUsuario}
+                                        onClick={() => setConfirmandoExclusao(false)}
+                                    >
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
                         <button
                             type="button"
                             className={styles.modalFechar}
-                            onClick={() => setUsuarioSelecionado(null)}
+                            disabled={processandoUsuario}
+                            onClick={() => {
+                                setUsuarioSelecionado(null);
+                                setConfirmandoExclusao(false);
+                                setErroGerenciamento("");
+                            }}
                         >
                             Fechar
                         </button>
@@ -602,84 +754,84 @@ export default function AdminDashboard() {
             )}
 
             {empresaSelecionada && (
+            <div
+                className={styles.modalOverlay}
+                onClick={() => setEmpresaSelecionada(null)}
+            >
                 <div
-                    className={styles.modalOverlay}
-                    onClick={() => setEmpresaSelecionada(null)}
+                    className={styles.modal}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Detalhes da empresa"
+                    onClick={(e) => e.stopPropagation()}
                 >
-                    <div
-                        className={styles.modal}
-                        role="dialog"
-                        aria-modal="true"
-                        aria-label="Detalhes da empresa"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <h2>Detalhes da empresa</h2>
+                    <h2>Detalhes da empresa</h2>
 
-                        <p>
-                            <strong>Nome:</strong> {empresaSelecionada.nome}
-                        </p>
+                    <p>
+                        <strong>Nome:</strong> {empresaSelecionada.nome}
+                    </p>
 
-                        <p>
-                            <strong>Razão social:</strong>{" "}
-                            {empresaSelecionada.razao_social || "Não informado"}
-                        </p>
+                    <p>
+                        <strong>Razão social:</strong>{" "}
+                        {empresaSelecionada.razao_social || "Não informado"}
+                    </p>
 
-                        <p>
-                            <strong>CNPJ:</strong> {empresaSelecionada.cnpj}
-                        </p>
+                    <p>
+                        <strong>CNPJ:</strong> {empresaSelecionada.cnpj}
+                    </p>
 
-                        <p>
-                            <strong>Setor:</strong>{" "}
-                            {empresaSelecionada.setor || "Não informado"}
-                        </p>
+                    <p>
+                        <strong>Setor:</strong>{" "}
+                        {empresaSelecionada.setor || "Não informado"}
+                    </p>
 
-                        <p>
-                            <strong>Localização:</strong>{" "}
-                            {[empresaSelecionada.cidade, empresaSelecionada.uf]
-                                .filter(Boolean)
-                                .join(" - ") || "Não informado"}
-                        </p>
+                    <p>
+                        <strong>Localização:</strong>{" "}
+                        {[empresaSelecionada.cidade, empresaSelecionada.uf]
+                            .filter(Boolean)
+                            .join(" - ") || "Não informado"}
+                    </p>
 
-                        <h3>Vagas publicadas</h3>
+                    <h3>Vagas publicadas</h3>
 
-                        {carregandoVagas ? (
-                            <p>Carregando vagas...</p>
-                        ) : erroVagas ? (
-                            <p>{erroVagas}</p>
-                        ) : vagasEmpresa.length === 0 ? (
-                            <p>Nenhuma vaga cadastrada.</p>
-                        ) : (
-                            <div className={styles.tableWrapper}>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Vaga</th>
-                                            <th>Status</th>
-                                            <th>Modalidade</th>
+                    {carregandoVagas ? (
+                        <p>Carregando vagas...</p>
+                    ) : erroVagas ? (
+                        <p>{erroVagas}</p>
+                    ) : vagasEmpresa.length === 0 ? (
+                        <p>Nenhuma vaga cadastrada.</p>
+                    ) : (
+                        <div className={styles.tableWrapper}>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Vaga</th>
+                                        <th>Status</th>
+                                        <th>Modalidade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {vagasEmpresa.map((vaga) => (
+                                        <tr key={vaga.id}>
+                                            <td>{vaga.titulo}</td>
+                                            <td>{vaga.status}</td>
+                                            <td>{vaga.modalidade}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        {vagasEmpresa.map((vaga) => (
-                                            <tr key={vaga.id}>
-                                                <td>{vaga.titulo}</td>
-                                                <td>{vaga.status}</td>
-                                                <td>{vaga.modalidade}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )}
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
 
-                        <button
-                            type="button"
-                            className={styles.modalFechar}
-                            onClick={() => setEmpresaSelecionada(null)}
-                        >
-                            Fechar
-                        </button>
-                    </div>
+                    <button
+                        type="button"
+                        className={styles.modalFechar}
+                        onClick={() => setEmpresaSelecionada(null)}
+                    >
+                        Fechar
+                    </button>
                 </div>
+            </div>
             )}
         </div>
     );

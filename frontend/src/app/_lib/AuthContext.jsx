@@ -36,6 +36,7 @@ export function AuthProvider({ children }) {
     sair,
     ehCandidato: usuario?.perfil === 'CANDIDATO',
     ehRecrutador: usuario?.perfil === 'RECRUTADOR',
+    ehAdmin: usuario?.perfil === 'ADMIN',
   }), [usuario, carregando, entrar, sair]);
 
   return <AuthContext.Provider value={valor}>{children}</AuthContext.Provider>;
