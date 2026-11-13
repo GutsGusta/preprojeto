@@ -5,6 +5,7 @@ import helmet from "helmet";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import healthRoutes from "./routes/healthRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.get("/", (request, response) => {
 app.use("/api/health", healthRoutes);
 
 app.use("/api/admin", adminRoutes);
+
+app.use("/api/auth", authRoutes);
 
 app.use(errorHandler);
 

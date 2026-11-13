@@ -1,0 +1,40 @@
+main {
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}   
+
+.barra-lateral {
+    background-color: white;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    flex-direction: column;
+    width: 250px;
+    height: 900px;
+    gap: 20px;
+}
+
+.barra-lateral button {
+    background-color: white;
+    border: none;
+    font-size: 18px;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+}
+
+.card-info {
+    background-color: white;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    flex-direction: column;
+    border-radius: 15px;
+    font-size: 20px;
+    padding: 20px;
+}
