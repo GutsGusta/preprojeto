@@ -35,6 +35,16 @@ export const habilidadesApi = {
   buscar: (q) => api('/habilidades', { parametros: { q } }),
 };
 
+export const homeApi = {
+  vagasRecentes: () => api('/home/vagas-recentes'),
+};
+
+export const candidatoApi = {
+  resumo: () => api('/candidato/resumo'),
+  vagasRecomendadas: () => api('/candidato/vagas-recomendadas'),
+  atualizacoes: () => api('/candidato/atualizacoes'),
+};
+
 export const authApi = {
   login: (email, senha) => api('/auth/login', { metodo: 'POST', corpo: { email, senha } }),
   eu: () => api('/auth/me'),
