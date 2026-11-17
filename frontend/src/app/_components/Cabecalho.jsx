@@ -16,7 +16,8 @@ export default function Cabecalho() {
   const { usuario, ehCandidato, ehRecrutador, sair } = useAuth();
   const caminho = usePathname();
   const router = useRouter();
-  if (caminho === '/login') return null;
+  // O dashboard do candidato tem o próprio cabeçalho
+  if (caminho === '/login' || caminho.startsWith('/candidato')) return null;
 
   return (
     <header className="cabecalho">
@@ -29,6 +30,7 @@ export default function Cabecalho() {
         <div className="btn-login">
           {usuario ? (
             <>
+              {ehCandidato && <Link href="/candidato">Meu painel</Link>}
               <span>{usuario.nome}</span>
               <Link href="/" className="entrar" onClick={sair}>Sair</Link>
             </>
