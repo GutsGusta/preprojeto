@@ -3,7 +3,11 @@ import { exigirCandidato } from "../middlewares/autenticacao.js";
 import {
     obterResumoCandidato,
     listarVagasRecomendadas,
-    listarAtualizacoes
+    listarAtualizacoes,
+    obterCurriculo,
+    salvarCurriculo,
+    listarMinhasCandidaturas,
+    listarHistorico
 } from "../controllers/candidatoController.js";
 
 const router = Router();
@@ -14,5 +18,9 @@ router.use(exigirCandidato);
 router.get("/resumo", obterResumoCandidato);
 router.get("/vagas-recomendadas", listarVagasRecomendadas);
 router.get("/atualizacoes", listarAtualizacoes);
+router.get("/curriculo", obterCurriculo);
+router.put("/curriculo", salvarCurriculo);
+router.get("/candidaturas", listarMinhasCandidaturas);
+router.get("/historico", listarHistorico);
 
 export default router;

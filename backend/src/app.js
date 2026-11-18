@@ -8,15 +8,29 @@ import adminRoutes from "./routes/adminRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import homeRoutes from "./routes/homeRoutes.js";
 import candidatoRoutes from "./routes/candidatoRoutes.js";
+import vagasRoutes from "./routes/vagasRoutes.js";
+import candidaturasRoutes from "./routes/candidaturasRoutes.js";
+import favoritosRoutes from "./routes/favoritosRoutes.js";
+import habilidadesRoutes from "./routes/habilidadesRoutes.js";
+import empresasRoutes from "./routes/empresasRoutes.js";
 
 const app = express();
 
 app.use(helmet());
+
+const origensPermitidas = (process.env.FRONTEND_URL || "http://localhost:3000")
+  .split(",")
+  .map((origem) => origem.trim());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin(origem, responder) {
+      const local = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origem || "");
+      responder(null, !origem || local || origensPermitidas.includes(origem));
+    },
   }),
 );
+
+
 app.use(express.json());
 
 app.get("/", (request, response) => {
@@ -34,6 +48,16 @@ app.use("/api/auth", authRoutes);
 app.use("/api/home", homeRoutes);
 
 app.use("/api/candidato", candidatoRoutes);
+
+app.use("/api/vagas", vagasRoutes);
+
+app.use("/api/candidaturas", candidaturasRoutes);
+
+app.use("/api/favoritos", favoritosRoutes);
+
+app.use("/api/habilidades", habilidadesRoutes);
+
+app.use("/api/empresas", empresasRoutes);
 
 app.use(errorHandler);
 

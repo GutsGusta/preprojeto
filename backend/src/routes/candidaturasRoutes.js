@@ -1,12 +1,17 @@
-const { Router } = require('express');
-const { autenticar, exigirPerfil } = require('../middlewares/auth');
-const candidaturasController = require('../controllers/candidaturasController');
+import { Router } from "express";
+import { exigirCandidato, exigirLogin, exigirRecrutador } from "../middlewares/autenticacao.js";
+import {
+    listarMotivos,
+    detalharCandidatura,
+    movimentarCandidatura,
+    desistirCandidatura
+} from "../controllers/candidaturasController.js";
 
-// Criar e listar as candidaturas de uma vaga fica em /api/vagas/:id/candidaturas
-const rotas = Router();
-rotas.get('/motivos-reprovacao', candidaturasController.motivos);
-rotas.get('/:id', autenticar, candidaturasController.detalhar);
-rotas.patch('/:id/etapa', autenticar, exigirPerfil('RECRUTADOR'), candidaturasController.movimentar);
-rotas.delete('/:id', autenticar, exigirPerfil('CANDIDATO'), candidaturasController.desistir);
+const router = Router();
 
-module.exports = rotas;
+router.get("/motivos-reprovacao", listarMotivos);
+router.get("/:id", exigirLogin, detalharCandidatura);
+router.patch("/:id/etapa", exigirRecrutador, movimentarCandidatura);
+router.delete("/:id", exigirCandidato, desistirCandidatura);
+
+export default router;

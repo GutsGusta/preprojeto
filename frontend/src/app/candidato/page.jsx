@@ -7,6 +7,9 @@ import RotaProtegida from "../_components/RotaProtegida";
 import { useAuth } from "../_lib/AuthContext";
 import { candidatoApi } from "../_lib/servicos";
 import { MODALIDADE, CONTRATO, data, iniciais, local } from "../_lib/formatar";
+import MeuCurriculo from "./MeuCurriculo";
+import MinhasCandidaturas from "./MinhasCandidaturas";
+import FavoritosHistorico from "./FavoritosHistorico";
 
 const menus = [
     "Dashboard",
@@ -15,19 +18,16 @@ const menus = [
     "Favoritos e histórico",
 ];
 
-const STATUS_AVANCO = ["ENTREVISTA", "APROVADO_ETAPA", "APROVADA", "CONTRATADO"];
-const STATUS_ENCERRADO = ["REPROVADA", "REPROVADO", "DESISTENCIA", "DESISTIU"];
+const STATUS_AVANCO = ["ENTREVISTA", "APROVADA"];
+const STATUS_ENCERRADO = ["REPROVADA", "DESISTENCIA"];
 const NOME_STATUS = {
     ENVIADA: "Enviada",
     EM_ANALISE: "Triagem",
-    EM_ANDAMENTO: "Andamento",
     ENTREVISTA: "Entrevista",
-    APROVADO_ETAPA: "Próxima etapa",
     APROVADA: "Aprovada",
-    CONTRATADO: "Contratado",
 };
 
-function useCarregar(buscar, mensagemErro) {
+function useCarregar(buscar, mensagemErro, versao = 0) {
     const [dados, setDados] = useState(null);
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState("");
@@ -37,7 +37,7 @@ function useCarregar(buscar, mensagemErro) {
             .then(setDados)
             .catch(() => setErro(mensagemErro))
             .finally(() => setCarregando(false));
-    }, []);
+    }, [versao]);
 
     return { dados, carregando, erro };
 }
@@ -65,8 +65,9 @@ function descreverAtualizacao(atualizacao) {
 function PainelCandidato() {
     const { usuario, sair } = useAuth();
     const [pagina, setPagina] = useState("Dashboard");
+    const [versao, setVersao] = useState(0);
 
-    const resumo = useCarregar(candidatoApi.resumo, "Erro ao carregar indicadores. Verifique a conexão com o servidor.");
+    const resumo = useCarregar(candidatoApi.resumo, "Erro ao carregar indicadores. Verifique a conexão com o servidor.", versao);
     const recomendadas = useCarregar(candidatoApi.vagasRecomendadas, "Erro ao carregar vagas. Verifique a conexão com o servidor.");
     const atualizacoes = useCarregar(candidatoApi.atualizacoes, "Erro ao carregar atualizações. Verifique a conexão com o servidor.");
 
@@ -101,9 +102,9 @@ function PainelCandidato() {
                     {pagina !== "Dashboard" ? (
                         <>
                             <h1>{pagina}</h1>
-                            <section className="painel-candidato">
-                                <p>Esta seção ainda está em desenvolvimento.</p>
-                            </section>
+                            {pagina === "Meu currículo" && <MeuCurriculo aoSalvar={() => setVersao(versao + 1)} />}
+                            {pagina === "Minhas candidaturas" && <MinhasCandidaturas />}
+                            {pagina === "Favoritos e histórico" && <FavoritosHistorico />}
                         </>
                     ) : (
                         <>

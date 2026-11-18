@@ -11,9 +11,9 @@ import { MODALIDADE, CONTRATO, STATUS_VAGA, data } from '@/app/_lib/formatar';
 
 // Ações possíveis em cada status (RN08)
 const ACOES = {
-  RASCUNHO: [{ status: 'ABERTA', rotulo: 'Publicar', principal: true }],
-  ABERTA: [{ status: 'PAUSADA', rotulo: 'Pausar' }, { status: 'ENCERRADA', rotulo: 'Encerrar', perigo: true }],
-  PAUSADA: [{ status: 'ABERTA', rotulo: 'Reabrir', principal: true }, { status: 'ENCERRADA', rotulo: 'Encerrar', perigo: true }],
+  RASCUNHO: [{ status: 'PUBLICADA', rotulo: 'Publicar', principal: true }],
+  PUBLICADA: [{ status: 'PAUSADA', rotulo: 'Pausar' }, { status: 'ENCERRADA', rotulo: 'Encerrar', perigo: true }],
+  PAUSADA: [{ status: 'PUBLICADA', rotulo: 'Reabrir', principal: true }, { status: 'ENCERRADA', rotulo: 'Encerrar', perigo: true }],
   ENCERRADA: [],
 };
 

@@ -1,18 +1,12 @@
 import Link from "next/link";
 import "./page.css";
 import VagasRecentes from "./_components/VagasRecentes";
-import { redirect } from 'next/navigation';
-
-export function Inicio() {
-  redirect('/vagas');
-}
-
 export default function Home() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
 
   return (
     <>
-      <main>
+      <main className="inicio">
         <div className="texto">
           <h1>Encontre a vaga certa para você</h1>
           <p>Busque entre vagas de empresas cadastradas e acompanhe cada etapa da sua candidatura.</p>
@@ -28,8 +22,8 @@ export default function Home() {
             <button type="submit" className="btn-pesquisar">Buscar vagas</button>
           </form>
         </div>  
-        <div className="pagina">
-          <div className="">
+        <div className="inicio-conteudo">
+          <div className="inicio-vagas">
             <div className="txt-vagas">
               <h3>Vagas recentes</h3>
               <Link className="btn-vagas" href="/vagas">Ver todas</Link> 
@@ -41,13 +35,13 @@ export default function Home() {
             <article className="card-sou">
               <h3>Sou candidato</h3>
               <p>Monte seu currículo, candidate-se e acompanhe o processo.</p>
-              <Link href="./login" className="cadastrar">Criar conta grátis</Link>
+              <Link href="/cadastro" className="cadastrar">Criar conta grátis</Link>
             </article>
 
             <article className="card-sou">
               <h3>Sou empresa</h3>
               <p>Publique vagas e organize as etapas de seleção em um só lugar.</p>
-              <Link href="./login" className="entrar">Anunciar vagas</Link>
+              <Link href="/cadastro?tipo=empresa" className="entrar">Anunciar vagas</Link>
             </article>
           </div>
           

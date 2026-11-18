@@ -1,11 +1,11 @@
-const { Router } = require('express');
-const { autenticar, exigirPerfil } = require('../middlewares/auth');
-const favoritosController = require('../controllers/favoritosController');
+import { Router } from "express";
+import { exigirCandidato, exigirLogin } from "../middlewares/autenticacao.js";
+import { listarVagasFavoritas, adicionarFavorito, removerFavorito } from "../controllers/favoritosController.js";
 
-const rotas = Router();
-rotas.use(autenticar);
-rotas.get('/vagas', exigirPerfil('CANDIDATO'), favoritosController.vagasFavoritas);
-rotas.post('/', favoritosController.adicionar);
-rotas.delete('/:tipo/:referenciaId', favoritosController.remover);
+const router = Router();
 
-module.exports = rotas;
+router.get("/vagas", exigirCandidato, listarVagasFavoritas);
+router.post("/", exigirLogin, adicionarFavorito);
+router.delete("/:tipo/:referenciaId", exigirLogin, removerFavorito);
+
+export default router;

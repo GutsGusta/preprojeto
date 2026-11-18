@@ -37,12 +37,22 @@ export const habilidadesApi = {
 
 export const homeApi = {
   vagasRecentes: () => api('/home/vagas-recentes'),
+  numeros: () => api('/home/numeros'),
+};
+
+export const empresasApi = {
+  listar: (q) => api('/empresas', { parametros: { q } }),
+  detalhar: (id) => api(`/empresas/${id}`),
 };
 
 export const candidatoApi = {
   resumo: () => api('/candidato/resumo'),
   vagasRecomendadas: () => api('/candidato/vagas-recomendadas'),
   atualizacoes: () => api('/candidato/atualizacoes'),
+  curriculo: () => api('/candidato/curriculo'),
+  salvarCurriculo: (dados) => api('/candidato/curriculo', { metodo: 'PUT', corpo: dados }),
+  candidaturas: () => api('/candidato/candidaturas'),
+  historico: () => api('/candidato/historico'),
 };
 
 export const authApi = {

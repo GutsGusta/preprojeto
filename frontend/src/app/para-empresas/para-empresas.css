@@ -1,0 +1,324 @@
+.para-empresas {
+    padding-bottom: 64px;
+}
+
+.para-empresas h2 {
+    font-size: 28px;
+    text-align: center;
+}
+
+.para-empresas .botao.grande {
+    min-height: 50px;
+    padding: 0 26px;
+    font-size: 15px;
+}
+
+.hero-empresas {
+    background: linear-gradient(135deg, #fff 0%, #fbe6cc 100%);
+    border-bottom: 1px solid #d6d1cd;
+    padding: 64px 0;
+}
+
+.hero-conteudo {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+    gap: 48px;
+}
+
+.hero-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.selo {
+    width: fit-content;
+    font-size: 13px;
+    font-weight: 600;
+    color: #a34c08;
+    background: #fff;
+    border: 1px solid #f2ac41;
+    border-radius: 999px;
+    padding: 4px 14px;
+}
+
+.hero-texto h1 {
+    font-size: 44px;
+    line-height: 1.15;
+}
+
+.hero-texto h1 span {
+    color: #C65D0A;
+}
+
+.hero-texto p {
+    font-size: 17px;
+    color: #4b4642;
+    max-width: 520px;
+}
+
+.hero-acoes {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+}
+
+.hero-quadro {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 20px 50px rgb(122 58 6 / 15%);
+}
+
+.mini-coluna {
+    background: #f2f0ef;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 190px;
+    font-size: 13px;
+}
+
+.mini-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #d6d1cd;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 12.5px;
+}
+
+.mini-card em {
+    margin-left: auto;
+    font-style: normal;
+    font-weight: 700;
+    color: #a34c08;
+}
+
+.mini-card.destaque {
+    border-color: #C65D0A;
+    box-shadow: 0 4px 12px rgb(198 93 10 / 20%);
+}
+
+.mini-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fbe6cc;
+    color: #7a3a06;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.mini-vazio {
+    border: 2px dashed #d6d1cd;
+    border-radius: 8px;
+    color: #a39c97;
+    text-align: center;
+    padding: 14px 4px;
+    font-size: 12px;
+}
+
+.numeros-empresas {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: -32px;
+    position: relative;
+}
+
+.numeros-empresas div {
+    background: #fff;
+    border: 1px solid #d6d1cd;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 1px 2px rgb(28 25 23 / 6%), 0 2px 8px rgb(28 25 23 / 5%);
+}
+
+.numeros-empresas strong {
+    display: block;
+    font-family: var(--font-poppins), Poppins, sans-serif;
+    font-size: 32px;
+    color: #C65D0A;
+}
+
+.numeros-empresas span {
+    font-size: 14px;
+    color: #4b4642;
+}
+
+.secao-empresas {
+    padding-top: 64px;
+}
+
+.subtitulo {
+    text-align: center;
+    color: #4b4642;
+    margin: 8px 0 32px;
+}
+
+.grade-beneficios {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.card-beneficio {
+    background: #fff;
+    border: 1px solid #d6d1cd;
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-beneficio p {
+    font-size: 14px;
+    color: #4b4642;
+}
+
+.icone-beneficio {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #fbe6cc;
+    color: #C65D0A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.faixa-passos {
+    background: #fff;
+    border-top: 1px solid #d6d1cd;
+    border-bottom: 1px solid #d6d1cd;
+    margin-top: 64px;
+    padding-bottom: 64px;
+}
+
+.lista-passos {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    counter-reset: passo;
+}
+
+.lista-passos li {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lista-passos p {
+    font-size: 14px;
+    color: #4b4642;
+}
+
+.numero-passo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #C65D0A;
+    color: #fff;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.perguntas {
+    max-width: 760px;
+    margin: 24px auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.perguntas details {
+    background: #fff;
+    border: 1px solid #d6d1cd;
+    border-radius: 8px;
+    padding: 16px 20px;
+}
+
+.perguntas summary {
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.perguntas details p {
+    margin-top: 10px;
+    color: #4b4642;
+}
+
+.chamada-final {
+    margin-top: 64px;
+    background: #C65D0A;
+    color: #fff;
+    border-radius: 14px;
+    padding: 48px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+}
+
+.chamada-final p {
+    color: #fbe6cc;
+    margin-bottom: 8px;
+}
+
+.para-empresas .botao.claro {
+    background: #fff;
+    color: #a34c08;
+}
+
+.para-empresas .botao.claro:hover {
+    background: #fbe6cc;
+}
+
+@media (max-width: 900px) {
+    .hero-conteudo,
+    .grade-beneficios {
+        grid-template-columns: 1fr;
+    }
+
+    .numeros-empresas,
+    .lista-passos {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero-texto h1 {
+        font-size: 34px;
+    }
+}
+
+@media (max-width: 560px) {
+    .numeros-empresas,
+    .lista-passos {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-quadro {
+        display: none;
+    }
+}

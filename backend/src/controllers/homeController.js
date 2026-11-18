@@ -27,3 +27,23 @@ export async function listarVagasRecentes(req, res, next) {
     next(erro);
   }
 }
+
+// GET /api/home/numeros
+// Totais da plataforma, usados na página "Para empresas".
+export async function obterNumeros(req, res, next) {
+  try {
+    const [linhas] = await pool.query(`
+      SELECT
+        (SELECT COUNT(*) FROM candidato c
+          JOIN usuario u ON u.id_usuario = c.usuario_id
+          WHERE u.excluido_em IS NULL) AS candidatos,
+        (SELECT COUNT(*) FROM empresa) AS empresas,
+        (SELECT COUNT(*) FROM vaga WHERE status = 'PUBLICADA') AS vagasAbertas,
+        (SELECT COUNT(*) FROM candidatura) AS candidaturas
+    `);
+
+    return res.json(linhas[0]);
+  } catch (erro) {
+    next(erro);
+  }
+}

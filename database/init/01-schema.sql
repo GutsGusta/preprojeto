@@ -23,7 +23,8 @@ CREATE TABLE `candidatura` (
   `status` enum('ENVIADA','EM_ANALISE','ENTREVISTA','REPROVADA','APROVADA','DESISTENCIA') NOT NULL DEFAULT 'ENVIADA',
   `carta_apresentacao` text DEFAULT NULL,
   `curriculo_snapshot` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`curriculo_snapshot`)),
-  `criada_em` datetime NOT NULL DEFAULT current_timestamp()
+  `criada_em` datetime NOT NULL DEFAULT current_timestamp(),
+  `atualizada_em` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `curriculo` (
@@ -33,7 +34,7 @@ CREATE TABLE `curriculo` (
   `pretensao_salarial` decimal(10,2) DEFAULT NULL,
   `arquivo_pdf_url` varchar(500) DEFAULT NULL,
   `percentual_preenchido` tinyint(3) UNSIGNED NOT NULL DEFAULT 0
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `curriculo_habilidade` (
   `curriculo_id` int(10) UNSIGNED NOT NULL,
@@ -71,7 +72,7 @@ CREATE TABLE `experiencia` (
   `inicio` date DEFAULT NULL,
   `fim` date DEFAULT NULL,
   `atual` tinyint(1) NOT NULL DEFAULT 0
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `favorito_candidato` (
   `id_favorito_candidato` int(10) UNSIGNED NOT NULL,
@@ -93,7 +94,7 @@ CREATE TABLE `formacao` (
   `nivel` varchar(50) DEFAULT NULL,
   `inicio` date DEFAULT NULL,
   `fim` date DEFAULT NULL
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `habilidade` (
   `id_habilidade` int(10) UNSIGNED NOT NULL,
@@ -135,7 +136,9 @@ CREATE TABLE `usuario` (
   `email` varchar(255) NOT NULL,
   `senha_hash` varchar(255) NOT NULL,
   `perfil` enum('CANDIDATO','RECRUTADOR','ADMIN') NOT NULL,
-  `ativo` tinyint(1) NOT NULL DEFAULT 1
+  `ativo` tinyint(1) NOT NULL DEFAULT 1,
+  `criado_em` datetime NOT NULL DEFAULT current_timestamp(),
+  `excluido_em` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `vaga` (
@@ -155,7 +158,14 @@ CREATE TABLE `vaga` (
   `status` enum('RASCUNHO','PUBLICADA','PAUSADA','ENCERRADA') NOT NULL DEFAULT 'RASCUNHO',
   `publicada_em` datetime DEFAULT NULL,
   `encerrada_em` datetime DEFAULT NULL
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `visualizacao_vaga` (
+  `id_visualizacao` int(10) UNSIGNED NOT NULL,
+  `usuario_id` int(10) UNSIGNED NOT NULL,
+  `vaga_id` int(10) UNSIGNED NOT NULL,
+  `visualizada_em` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `vaga_habilidade` (
   `vaga_id` int(10) UNSIGNED NOT NULL,
@@ -236,6 +246,11 @@ ALTER TABLE `vaga`
   ADD KEY `fk_vaga_empresa` (`empresa_id`),
   ADD KEY `fk_vaga_recrutador` (`recrutador_id`);
 
+ALTER TABLE `visualizacao_vaga`
+  ADD PRIMARY KEY (`id_visualizacao`),
+  ADD KEY `fk_visualizacao_usuario` (`usuario_id`, `visualizada_em`),
+  ADD KEY `fk_visualizacao_vaga` (`vaga_id`);
+
 ALTER TABLE `vaga_habilidade`
   ADD PRIMARY KEY (`vaga_id`,`habilidade_id`),
   ADD KEY `fk_vh_habilidade` (`habilidade_id`);
@@ -285,6 +300,9 @@ ALTER TABLE `usuario`
 ALTER TABLE `vaga`
   MODIFY `id_vaga` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `visualizacao_vaga`
+  MODIFY `id_visualizacao` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 ALTER TABLE `candidato`
   ADD CONSTRAINT `fk_candidato_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id_usuario`);
 
@@ -332,6 +350,10 @@ ALTER TABLE `recrutador`
 ALTER TABLE `vaga`
   ADD CONSTRAINT `fk_vaga_empresa` FOREIGN KEY (`empresa_id`) REFERENCES `empresa` (`id_empresa`),
   ADD CONSTRAINT `fk_vaga_recrutador` FOREIGN KEY (`recrutador_id`) REFERENCES `recrutador` (`id_recrutador`);
+
+ALTER TABLE `visualizacao_vaga`
+  ADD CONSTRAINT `fk_visualizacao_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_visualizacao_vaga` FOREIGN KEY (`vaga_id`) REFERENCES `vaga` (`id_vaga`) ON DELETE CASCADE;
 
 ALTER TABLE `vaga_habilidade`
   ADD CONSTRAINT `fk_vh_habilidade` FOREIGN KEY (`habilidade_id`) REFERENCES `habilidade` (`id_habilidade`),

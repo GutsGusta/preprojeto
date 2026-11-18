@@ -1,32 +1,32 @@
 -- JobMatch | Dados ficticios para desenvolvimento
 -- Execute apos jobmatch_tabelas.sql, em banco vazio.
 -- 10 registros por tabela, exceto usuario (21) para preservar perfis e relacionamentos.
--- Senhas/hash herdados do dump original: substituir antes de qualquer ambiente real.
+-- Senha de todos os usuarios: Senha123 (hash no formato sal:hash usado pelo authController).
 SET NAMES utf8mb4;
 START TRANSACTION;
 
 INSERT INTO `usuario` (`id_usuario`, `email`, `senha_hash`, `perfil`, `ativo`) VALUES
-(1, 'ana@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'CANDIDATO', 1),
-(2, 'bruno@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'CANDIDATO', 1),
-(3, 'carla@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'CANDIDATO', 1),
-(4, 'recrutador1@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'RECRUTADOR', 1),
-(5, 'recrutador2@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'RECRUTADOR', 1),
-(6, 'candidato6@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'CANDIDATO', 1),
-(7, 'candidato7@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'CANDIDATO', 1),
-(8, 'candidato8@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'CANDIDATO', 1),
-(9, 'candidato9@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'CANDIDATO', 1),
-(10, 'candidato10@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'CANDIDATO', 1),
-(11, 'candidato11@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'CANDIDATO', 1),
-(12, 'candidato12@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'CANDIDATO', 1),
-(13, 'recrutador13@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'RECRUTADOR', 1),
-(14, 'recrutador14@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'RECRUTADOR', 1),
-(15, 'recrutador15@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'RECRUTADOR', 1),
-(16, 'recrutador16@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'RECRUTADOR', 1),
-(17, 'recrutador17@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'RECRUTADOR', 1),
-(18, 'recrutador18@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'RECRUTADOR', 1),
-(19, 'recrutador19@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'RECRUTADOR', 1),
-(20, 'recrutador20@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'RECRUTADOR', 1),
-(21, 'admin@exemplo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'ADMIN', 1);
+(1, 'ana@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'CANDIDATO', 1),
+(2, 'bruno@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'CANDIDATO', 1),
+(3, 'carla@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'CANDIDATO', 1),
+(4, 'recrutador1@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'RECRUTADOR', 1),
+(5, 'recrutador2@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'RECRUTADOR', 1),
+(6, 'candidato6@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'CANDIDATO', 1),
+(7, 'candidato7@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'CANDIDATO', 1),
+(8, 'candidato8@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'CANDIDATO', 1),
+(9, 'candidato9@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'CANDIDATO', 1),
+(10, 'candidato10@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'CANDIDATO', 1),
+(11, 'candidato11@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'CANDIDATO', 1),
+(12, 'candidato12@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'CANDIDATO', 1),
+(13, 'recrutador13@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'RECRUTADOR', 1),
+(14, 'recrutador14@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'RECRUTADOR', 1),
+(15, 'recrutador15@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'RECRUTADOR', 1),
+(16, 'recrutador16@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'RECRUTADOR', 1),
+(17, 'recrutador17@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'RECRUTADOR', 1),
+(18, 'recrutador18@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'RECRUTADOR', 1),
+(19, 'recrutador19@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'RECRUTADOR', 1),
+(20, 'recrutador20@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'RECRUTADOR', 1),
+(21, 'admin@exemplo.com', '3683b6e5a226511294feeabd75b96d67:8a8bcc08485f4540f68e4b5e71769583e1d394f9fca73e172e95f4203c7d0fe24482a9d6cef4e77118193bab6ee654f1622c372c9b1e87fa2cc6c6c8cc8c6a01', 'ADMIN', 1);
 
 INSERT INTO `empresa` (`id_empresa`, `razao_social`, `nome_fantasia`, `cnpj`, `setor`, `descricao`, `site`, `logo_url`, `cidade`, `uf`) VALUES
 (3, 'Horizonte Digital Tecnologia Ltda', 'Horizonte Digital', '00000000000001', 'Tecnologia', 'Empresa ficticia de desenvolvimento de software.', NULL, NULL, 'Sao Paulo', 'SP'),
@@ -110,7 +110,27 @@ INSERT INTO `etapa_vaga` (`id_etapa`, `vaga_id`, `nome`, `ordem`, `descricao`) V
 (20, 7, 'Entrevista', 2, 'Conversa com o recrutador.'),
 (21, 7, 'Resultado final', 3, 'Decisao sobre a candidatura.'),
 (22, 8, 'Triagem de curriculo', 1, 'Analise inicial do perfil.'),
-(23, 8, 'Entrevista', 2, 'Conversa com o recrutador.');
+(23, 8, 'Entrevista', 2, 'Conversa com o recrutador.'),
+(24, 8, 'Resultado final', 3, 'Decisao sobre a candidatura.'),
+(26, 9, 'Entrevista', 2, 'Conversa com o recrutador.'),
+(27, 9, 'Resultado final', 3, 'Decisao sobre a candidatura.'),
+(29, 10, 'Entrevista', 2, 'Conversa com o recrutador.'),
+(30, 10, 'Resultado final', 3, 'Decisao sobre a candidatura.'),
+(31, 11, 'Triagem de curriculo', 1, 'Analise inicial do perfil.'),
+(32, 11, 'Entrevista', 2, 'Conversa com o recrutador.'),
+(33, 11, 'Resultado final', 3, 'Decisao sobre a candidatura.'),
+(34, 12, 'Triagem de curriculo', 1, 'Analise inicial do perfil.'),
+(35, 12, 'Entrevista', 2, 'Conversa com o recrutador.'),
+(36, 12, 'Resultado final', 3, 'Decisao sobre a candidatura.'),
+(37, 13, 'Triagem de curriculo', 1, 'Analise inicial do perfil.'),
+(38, 13, 'Entrevista', 2, 'Conversa com o recrutador.'),
+(39, 13, 'Resultado final', 3, 'Decisao sobre a candidatura.'),
+(40, 14, 'Triagem de curriculo', 1, 'Analise inicial do perfil.'),
+(41, 14, 'Entrevista', 2, 'Conversa com o recrutador.'),
+(42, 14, 'Resultado final', 3, 'Decisao sobre a candidatura.'),
+(43, 15, 'Triagem de curriculo', 1, 'Analise inicial do perfil.'),
+(44, 15, 'Entrevista', 2, 'Conversa com o recrutador.'),
+(45, 15, 'Resultado final', 3, 'Decisao sobre a candidatura.');
 
 INSERT INTO `formacao` (`id_formacao`, `curriculo_id`, `instituicao`, `curso`, `nivel`, `inicio`, `fim`) VALUES
 (4, 4, 'Faculdade Exemplo', 'Analise e Desenvolvimento de Sistemas', 'Tecnologo', '2021-02-01', '2023-12-15'),
@@ -165,24 +185,24 @@ INSERT INTO `candidatura` (`id_candidatura`, `candidato_id`, `vaga_id`, `etapa_a
 (6, 5, 7, 19, 'EM_ANALISE', 'Busco minha primeira oportunidade na area.', '{\"resumo\": \"Conhecimentos em Java e SQL\"}', '2026-10-30 16:39:18'),
 (7, 6, 9, 25, 'EM_ANALISE', 'Tenho experiencia em analise de dados.', '{\"resumo\": \"Python, SQL e Power BI\"}', '2026-10-30 16:39:18'),
 (8, 6, 10, 28, 'ENVIADA', 'Tenho interesse em automacao com Python.', '{\"resumo\": \"Experiencia em Python\"}', '2026-10-30 16:39:18'),
-(9, 7, 11, NULL, 'ENVIADA', 'Candidatura de teste.', NULL, '2026-11-02 10:00:00'),
-(10, 8, 12, NULL, 'ENVIADA', 'Candidatura de teste.', NULL, '2026-11-02 10:00:00'),
-(11, 9, 13, NULL, 'ENVIADA', 'Candidatura de teste.', NULL, '2026-11-02 10:00:00'),
-(12, 10, 14, NULL, 'ENVIADA', 'Candidatura de teste.', NULL, '2026-11-02 10:00:00'),
-(13, 11, 15, NULL, 'ENVIADA', 'Candidatura de teste.', NULL, '2026-11-02 10:00:00'),
-(14, 12, 11, NULL, 'ENVIADA', 'Candidatura de teste.', NULL, '2026-11-02 10:00:00');
+(9, 7, 11, 31, 'ENVIADA', 'Candidatura de teste.', NULL, '2026-11-02 10:00:00'),
+(10, 8, 12, 34, 'ENVIADA', 'Candidatura de teste.', NULL, '2026-11-02 10:00:00'),
+(11, 9, 13, 37, 'ENVIADA', 'Candidatura de teste.', NULL, '2026-11-02 10:00:00'),
+(12, 10, 14, 40, 'ENVIADA', 'Candidatura de teste.', NULL, '2026-11-02 10:00:00'),
+(13, 11, 15, 43, 'ENVIADA', 'Candidatura de teste.', NULL, '2026-11-02 10:00:00'),
+(14, 12, 11, 31, 'ENVIADA', 'Candidatura de teste.', NULL, '2026-11-02 10:00:00');
 
 INSERT INTO `historico_candidatura` (`id_historico`, `candidatura_id`, `etapa_id`, `autor_usuario_id`, `status`, `feedback`, `motivo_reprovacao`, `data_alteracao`) VALUES
 (4, 5, 16, 4, 'EM_ANALISE', 'Curriculo analisado.', NULL, '2026-10-30 16:39:18'),
 (5, 5, 17, 4, 'ENTREVISTA', 'Candidata selecionada para entrevista.', NULL, '2026-10-30 16:39:18'),
 (6, 6, 19, 4, 'EM_ANALISE', 'Candidatura em avaliacao.', NULL, '2026-10-30 16:39:18'),
 (7, 7, 25, 5, 'EM_ANALISE', 'Perfil recebido para analise.', NULL, '2026-10-30 16:39:18'),
-(8, 8, NULL, 4, 'ENVIADA', 'Registro de teste.', NULL, '2026-11-02 10:00:00'),
-(9, 9, NULL, 5, 'ENVIADA', 'Registro de teste.', NULL, '2026-11-02 10:00:00'),
-(10, 10, NULL, 13, 'ENVIADA', 'Registro de teste.', NULL, '2026-11-02 10:00:00'),
-(11, 11, NULL, 14, 'ENVIADA', 'Registro de teste.', NULL, '2026-11-02 10:00:00'),
-(12, 12, NULL, 15, 'ENVIADA', 'Registro de teste.', NULL, '2026-11-02 10:00:00'),
-(13, 13, NULL, 16, 'ENVIADA', 'Registro de teste.', NULL, '2026-11-02 10:00:00');
+(8, 8, 28, 4, 'ENVIADA', 'Registro de teste.', NULL, '2026-11-02 10:00:00'),
+(9, 9, 31, 5, 'ENVIADA', 'Registro de teste.', NULL, '2026-11-02 10:00:00'),
+(10, 10, 34, 13, 'ENVIADA', 'Registro de teste.', NULL, '2026-11-02 10:00:00'),
+(11, 11, 37, 14, 'ENVIADA', 'Registro de teste.', NULL, '2026-11-02 10:00:00'),
+(12, 12, 40, 15, 'ENVIADA', 'Registro de teste.', NULL, '2026-11-02 10:00:00'),
+(13, 13, 43, 16, 'ENVIADA', 'Registro de teste.', NULL, '2026-11-02 10:00:00');
 
 INSERT INTO `notificacao` (`id_notificacao`, `usuario_id`, `titulo`, `mensagem`, `lida`, `link`, `criada_em`) VALUES
 (1, 1, 'Entrevista agendada', 'Sua candidatura avancou para a etapa de entrevista.', 0, '/candidaturas', '2026-10-30 16:39:18'),
