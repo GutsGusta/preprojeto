@@ -7,7 +7,7 @@ import { favoritosApi } from '@/app/_lib/servicos';
 import { Aviso, Carregando, EstadoVazio } from '@/app/_components/Estados';
 import { StatusVaga } from '@/app/_components/Etiquetas';
 import BotaoFavorito from '@/app/_components/BotaoFavorito';
-import { MODALIDADE, CONTRATO, local, data } from '@/app/_lib/formatar';
+import { MODALIDADE, CONTRATO, local } from '@/app/_lib/formatar';
 
 export default function PaginaFavoritas() {
   return <RotaProtegida perfis={['CANDIDATO']}><VagasFavoritas /></RotaProtegida>;
@@ -38,10 +38,10 @@ function VagasFavoritas() {
                 <h3><Link href={`/vagas/${v.id}`}>{v.titulo}</Link></h3>
                 <p className="texto-2 pequeno">{[v.empresa, local(v), MODALIDADE[v.modalidade], CONTRATO[v.tipoContrato]].filter(Boolean).join(' · ')}</p>
               </div>
-              {v.status !== 'ABERTA' && <StatusVaga status={v.status} />}
+              {v.status !== 'PUBLICADA' && <StatusVaga status={v.status} />}
             </div>
             <div className="linha entre">
-              <span className="texto-2 pequeno">Salva em {data(v.salvaEm)}</span>
+              <span className="texto-2 pequeno">{v.empresa}</span>
               <BotaoFavorito vagaId={v.id} favorita aoMudar={(fav) => !fav && setVagas((l) => l.filter((x) => x.id !== v.id))} />
             </div>
           </article>

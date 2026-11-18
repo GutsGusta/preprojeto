@@ -1,12 +1,14 @@
 export const MODALIDADE = { PRESENCIAL: 'Presencial', HIBRIDO: 'Híbrido', REMOTO: 'Remoto' };
 export const CONTRATO = { CLT: 'CLT', PJ: 'PJ', ESTAGIO: 'Estágio', TEMPORARIO: 'Temporário', FREELANCER: 'Freelancer' };
-export const STATUS_VAGA = { RASCUNHO: 'Rascunho', ABERTA: 'Aberta', PAUSADA: 'Pausada', ENCERRADA: 'Encerrada' };
+export const STATUS_VAGA = { RASCUNHO: 'Rascunho', PUBLICADA: 'Publicada', PAUSADA: 'Pausada', ENCERRADA: 'Encerrada' };
 export const STATUS_CANDIDATURA = {
-  EM_ANDAMENTO: 'Em andamento', APROVADO_ETAPA: 'Aprovado na etapa',
-  CONTRATADO: 'Contratado', REPROVADO: 'Reprovado', DESISTIU: 'Desistiu',
+  ENVIADA: 'Enviada', EM_ANALISE: 'Em análise', ENTREVISTA: 'Entrevista',
+  APROVADA: 'Aprovada', REPROVADA: 'Reprovada', DESISTENCIA: 'Desistência',
 };
 
 const moeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+
+export const FINAIS = ['APROVADA', 'REPROVADA', 'DESISTENCIA'];
 
 export function faixaSalarial(min, max) {
   if (min == null && max == null) return 'Salário a combinar';

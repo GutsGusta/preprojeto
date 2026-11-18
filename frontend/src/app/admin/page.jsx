@@ -569,8 +569,9 @@ export default function AdminDashboard() {
                                                 ENVIADA: "Enviadas",
                                                 EM_ANALISE: "Em análise",
                                                 ENTREVISTA: "Entrevista",
-                                                APROVADO: "Aprovadas",
-                                                REPROVADO: "Reprovadas"
+                                                APROVADA: "Aprovadas",
+                                                REPROVADA: "Reprovadas",
+                                                DESISTENCIA: "Desistências"
                                             };
 
                                             return (
@@ -666,6 +667,7 @@ export default function AdminDashboard() {
                             }}>
                                 <button
                                     type="button"
+                                    className={styles.bloquear}
                                     disabled={processandoUsuario || confirmandoExclusao}
                                     onClick={() => alterarSituacao(usuarioSelecionado)}
                                 >
@@ -676,14 +678,11 @@ export default function AdminDashboard() {
 
                                 <button
                                     type="button"
+                                    className={styles.excluir}
                                     disabled={processandoUsuario}
                                     onClick={() => {
                                         setErroGerenciamento("");
                                         setConfirmandoExclusao(true);
-                                    }}
-                                    style={{
-                                        backgroundColor: "#dc2626",
-                                        color: "white"
                                     }}
                                 >
                                     Excluir conta

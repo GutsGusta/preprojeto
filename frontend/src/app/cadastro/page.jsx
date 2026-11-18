@@ -1,15 +1,24 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { Suspense, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../_lib/AuthContext';
 import { authApi } from '../_lib/servicos';
 import './cadastro.css';
 
-export default function Cadastro() {
+export default function PaginaCadastro() {
+  return (
+    <Suspense>
+      <Cadastro />
+    </Suspense>
+  );
+}
+
+function Cadastro() {
   const router = useRouter();
+  const parametros = useSearchParams();
   const { entrar } = useAuth();
-  const [activeTab, setActiveTab] = useState('candidato');
+  const [activeTab, setActiveTab] = useState(parametros.get('tipo') === 'empresa' ? 'empresa' : 'candidato');
   const [campos, setCampos] = useState({
     email: '', senha: '', cidade: '', uf: '',
     nome: '', cpf: '', dataNascimento: '', telefone: '',

@@ -40,7 +40,7 @@ export default function LoginPage() {
       } else if (usuario.perfil === 'RECRUTADOR') {
         router.push('/empresa/vagas');
       } else {
-        router.push('/');
+        router.push('/candidato');
       }
     } catch (falha) {
       setErro(falha.message);

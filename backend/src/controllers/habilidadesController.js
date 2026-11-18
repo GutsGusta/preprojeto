@@ -1,11 +1,20 @@
-const { query } = require('../config/db');
+import { pool } from "../config/database.js";
 
-// GET /api/habilidades?q=rea — sugestões para o campo de habilidades do formulário de vaga
-async function buscar(req, res) {
-  const termo = typeof req.query.q === 'string' ? req.query.q.trim() : '';
-  const linhas = await query(
-    `SELECT id, nome FROM habilidade WHERE ? = '' OR nome LIKE ? ORDER BY nome LIMIT 20`, [termo, `%${termo}%`]);
-  res.json(linhas);
+// GET /api/habilidades?q=rea — sugestões para os campos de habilidades
+export async function buscarHabilidades(req, res, next) {
+  try {
+    const termo = typeof req.query.q === "string" ? req.query.q.trim() : "";
+    const [habilidades] = await pool.query(
+      `SELECT id_habilidade AS id, nome
+       FROM habilidade
+       WHERE ? = '' OR nome LIKE ?
+       ORDER BY nome
+       LIMIT 20`,
+      [termo, `%${termo}%`]
+    );
+
+    return res.json(habilidades);
+  } catch (erro) {
+    next(erro);
+  }
 }
-
-module.exports = { buscar };

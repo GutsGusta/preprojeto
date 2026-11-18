@@ -1,7 +1,8 @@
-const { Router } = require('express');
-const habilidadesController = require('../controllers/habilidadesController');
+import { Router } from "express";
+import { buscarHabilidades } from "../controllers/habilidadesController.js";
 
-const rotas = Router();
-rotas.get('/', habilidadesController.buscar);
+const router = Router();
 
-module.exports = rotas;
+router.get("/", buscarHabilidades);
+
+export default router;

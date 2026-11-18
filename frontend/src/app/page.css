@@ -1,13 +1,4 @@
-.page {
-  background: #f6f7f9;
-  color: #172033;
-  display: flex;
-  min-height: 100vh;
-  justify-content: center;
-  padding: 48px 24px;
-}
-
-main {
+.inicio {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,7 +6,7 @@ main {
   gap: 40px;
 }
 
-.texto {
+.inicio .texto {
   background-color: rgb(218, 218, 218);
   display: flex;
   align-items: center;
@@ -25,7 +16,8 @@ main {
   height: 500px;
 }
 
-.pagina {
+.inicio .inicio-conteudo {
+  padding: 0 40px 56px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,26 +26,26 @@ main {
   width: 100%;
 }
 
-.txt-vagas {
+.inicio .txt-vagas {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
 }
 
-.btn-vagas {
+.inicio .btn-vagas {
   color: #C65D0A;
   text-decoration: underline;
 }
 
-.vagas {
+.inicio .vagas {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 40px;
 }
 
-.card-vaga {
+.inicio .card-vaga {
   display: flex;
   align-items: start;
   justify-content: start;
@@ -65,27 +57,28 @@ main {
   margin-top: 20px;
 }
 
-.card-vaga img {
+.inicio .card-vaga img {
   width: 75px;
   height: auto;
   border-radius: 10px;
 }
 
-.txt-detalhe {
+.inicio .txt-detalhe {
   display: flex;
   align-items: center;
   justify-content: start;
   gap: 90px;
 }
 
-.txt-nome {
+.inicio .txt-nome {
+  color: black;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
 
-.tags-vaga {
+.inicio .tags-vaga {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -94,12 +87,12 @@ main {
   font-weight: 500;
 }
 
-.tags-vaga .separador {
+.inicio .tags-vaga .separador {
   color: #aaa;
   font-weight: bold;
 }
 
-.descricao-vaga {
+.inicio .descricao-vaga {
   max-height: 70px;
   overflow: hidden;
   margin: 0;
@@ -109,14 +102,14 @@ main {
   mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
 }
 
-.sou-algo {
+.inicio .sou-algo {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 50px;
 }
 
-.card-sou {
+.inicio .card-sou {
   display: flex;
   align-items: start;
   justify-content: start;
@@ -131,7 +124,7 @@ main {
 }
 
 
-.pesquisa {
+.inicio .pesquisa {
   display: flex;
   align-items: flex-end;
   gap: 16px;
@@ -145,26 +138,26 @@ main {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
-.pesquisa-campo {
+.inicio .pesquisa-campo {
   display: flex;
   flex: 1;
   flex-direction: column;
   gap: 6px;
 }
 
-.pesquisa-campo label {
+.inicio .pesquisa-campo label {
   font-size: 12px;
   color: #4b5563;
 }
 
-.pesquisa-campo input {
+.inicio .pesquisa-campo input {
   padding: 10px 12px;
   border: solid 1px #c4c4c4;
   border-radius: 5px;
   font-size: 14px;
 }
 
-.btn-pesquisar {
+.inicio .btn-pesquisar {
   background-color: #C65D0A;
   color: #fff;
   border: none;
@@ -175,7 +168,7 @@ main {
 }
 
 @media (max-width: 600px) {
-  .pesquisa {
+  .inicio .pesquisa {
     flex-direction: column;
     align-items: stretch;
   }

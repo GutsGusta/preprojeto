@@ -8,7 +8,7 @@ import { vagasApi, candidaturasApi } from '@/app/_lib/servicos';
 import { Aviso, Carregando } from '@/app/_components/Estados';
 import { Match, StatusCandidatura, StatusVaga } from '@/app/_components/Etiquetas';
 import Modal from '@/app/_components/Modal';
-import { data, haQuantoTempo, iniciais, STATUS_CANDIDATURA } from '@/app/_lib/formatar';
+import { FINAIS, data, haQuantoTempo, iniciais, STATUS_CANDIDATURA } from '@/app/_lib/formatar';
 
 // Quadro do processo seletivo (Kanban): uma coluna por etapa.
 // Arraste um card para mudar a etapa, ou clique nele para ver o currículo e decidir.
@@ -135,8 +135,6 @@ function ProcessoVaga() {
     </div>
   );
 }
-
-const FINAIS = ['CONTRATADO', 'REPROVADO', 'DESISTIU'];
 
 // Currículo enviado, linha do tempo e decisões (avançar, mover, reprovar, contratar)
 function ModalCandidatura({ id, aoFechar, aoMudar }) {
@@ -269,7 +267,7 @@ function ModalCandidatura({ id, aoFechar, aoMudar }) {
         <ol className="linha-tempo">
           {c.historico.map((h) => (
             <li key={h.id}>
-              <strong>{h.etapa}</strong> · {STATUS_CANDIDATURA[h.status]}
+              <strong>{h.etapa}</strong> · {STATUS_CANDIDATURA[h.status] || h.status}
               <div className="texto-2 pequeno">{data(h.data)}{h.autor ? ` · por ${h.autor}` : ''}</div>
               {h.motivo && <div className="pequeno">Motivo: {h.motivo}</div>}
               {h.feedback && <div className="pequeno">“{h.feedback}”</div>}

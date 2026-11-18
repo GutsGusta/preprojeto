@@ -10,9 +10,7 @@ import { LogoEmpresa, Match, StatusCandidatura, StatusVaga } from '@/app/_compon
 import BotaoFavorito from '@/app/_components/BotaoFavorito';
 import Modal from '@/app/_components/Modal';
 import { IconeVoltar } from '@/app/_components/Icones';
-import { MODALIDADE, CONTRATO, faixaSalarial, local, data, haQuantoTempo } from '@/app/_lib/formatar';
-
-const FINAIS = ['CONTRATADO', 'REPROVADO', 'DESISTIU'];
+import { MODALIDADE, CONTRATO, FINAIS, faixaSalarial, local, data, haQuantoTempo } from '@/app/_lib/formatar';
 
 export default function DetalheVaga() {
   const { id } = useParams();
@@ -55,7 +53,7 @@ export default function DetalheVaga() {
   if (!vaga) return <div className="container pagina">{erro ? <Aviso>{erro}</Aviso> : <Carregando />}</div>;
 
   const minha = vaga.minhaCandidatura;
-  const aberta = vaga.status === 'ABERTA';
+  const aberta = vaga.status === 'PUBLICADA';
 
   return (
     <div className="container pagina pilha" style={{ gap: 20 }}>
@@ -69,7 +67,7 @@ export default function DetalheVaga() {
               <h1>{vaga.titulo}</h1>
               {!aberta && <StatusVaga status={vaga.status} />}
             </div>
-            <p className="texto-2">{vaga.empresa.nome}</p>
+            <Link href={`/empresas/${vaga.empresa.id}`} className="texto-2">{vaga.empresa.nome}</Link>
             <p className="pequeno">
               {[local(vaga), MODALIDADE[vaga.modalidade], CONTRATO[vaga.tipoContrato], vaga.nivel, vaga.area].filter(Boolean).join(' · ')}
             </p>

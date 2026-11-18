@@ -102,7 +102,7 @@ export default function FormularioVaga({ id }) {
     const dados = { ...v, uf: v.uf.toUpperCase(), etapas: v.etapas.map((x) => x.trim()), publicar };
     try {
       const r = editando ? await vagasApi.atualizar(id, dados) : await vagasApi.criar(dados);
-      if (editando && publicar && status === 'RASCUNHO') await vagasApi.alterarStatus(id, 'ABERTA');
+      if (editando && publicar && status === 'RASCUNHO') await vagasApi.alterarStatus(id, 'PUBLICADA');
       router.replace(`/empresa/vagas?salva=${r.id}`);
     } catch (e) {
       setErroGeral(e.message);

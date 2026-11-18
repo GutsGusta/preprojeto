@@ -1,0 +1,103 @@
+.topo-empresas {
+    background: #fff;
+    border-bottom: 1px solid #d6d1cd;
+    padding: 32px 0;
+}
+
+.topo-empresas p {
+    color: #4b4642;
+    margin-top: 6px;
+}
+
+.busca-empresas {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    max-width: 640px;
+}
+
+.grade-empresas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+}
+
+.card-empresa {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #fff;
+    border: 1px solid #d6d1cd;
+    border-radius: 8px;
+    padding: 20px;
+    color: #1c1917;
+    transition: border-color .15s, transform .15s;
+}
+
+.card-empresa:hover {
+    border-color: #C65D0A;
+    color: #1c1917;
+    transform: translateY(-2px);
+}
+
+.topo-card-empresa {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.descricao-empresa {
+    font-size: 14px;
+    color: #4b4642;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.vagas-empresa {
+    margin-top: auto;
+    width: fit-content;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: #e7e5e4;
+    color: #44403c;
+}
+
+.vagas-empresa.com-vagas {
+    background: #fbe6cc;
+    color: #a34c08;
+}
+
+.perfil-empresa {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.perfil-empresa > .pilha {
+    flex: 1;
+}
+
+.numero-empresa {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 24px;
+    border-radius: 8px;
+    background: #fbe6cc;
+    color: #a34c08;
+}
+
+.numero-empresa strong {
+    font-family: var(--font-poppins), Poppins, sans-serif;
+    font-size: 28px;
+    line-height: 1;
+}
+
+.numero-empresa span {
+    font-size: 13px;
+}
