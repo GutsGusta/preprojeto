@@ -92,15 +92,19 @@ const NIVEIS_HABILIDADE = ["BASICO", "INTERMEDIARIO", "AVANCADO"];
 
 // Quanto do currículo está preenchido (o candidato precisa de 70% para se candidatar)
 function calcularPercentual(dados) {
-  let total = 0;
-  const pessoais = [dados.nome, dados.telefone, dados.cidade, dados.uf, dados.dataNascimento];
-  if (pessoais.every(Boolean)) total += 20;
-  if ((dados.resumo || "").length >= 30) total += 20;
-  if (dados.pretensaoSalarial !== null) total += 10;
-  if (dados.formacoes.length > 0) total += 20;
-  if (dados.experiencias.length > 0) total += 15;
-  if (dados.habilidades.length > 0) total += 15;
-  return total;
+  const campos = [
+    dados.nome,
+    dados.telefone,
+    dados.cidade,
+    dados.uf,
+    dados.dataNascimento,
+    dados.resumo,
+    dados.pretensaoSalarial !== null,
+    dados.formacoes.length > 0,
+    dados.experiencias.length > 0,
+    dados.habilidades.length > 0,
+  ];
+  return Math.round((campos.filter(Boolean).length / campos.length) * 100);
 }
 
 async function buscarCurriculo(candidatoId) {
@@ -126,7 +130,7 @@ async function buscarCurriculo(candidatoId) {
     },
     resumo: c.resumo || "",
     pretensaoSalarial: c.pretensao_salarial === null ? null : Number(c.pretensao_salarial),
-    percentual: c.percentual_preenchido || 0,
+    percentual: 0,
     formacoes: [],
     experiencias: [],
     habilidades: [],
@@ -152,6 +156,15 @@ async function buscarCurriculo(candidatoId) {
       [c.id_curriculo]
     );
   }
+
+  curriculo.percentual = calcularPercentual({
+    ...curriculo.dados,
+    resumo: curriculo.resumo,
+    pretensaoSalarial: curriculo.pretensaoSalarial,
+    formacoes: curriculo.formacoes,
+    experiencias: curriculo.experiencias,
+    habilidades: curriculo.habilidades,
+  });
 
   return curriculo;
 }
@@ -308,13 +321,16 @@ export async function listarHistorico(req, res, next) {
   try {
     const [vagas] = await pool.query(
       `SELECT v.id_vaga AS id, v.titulo, v.modalidade, v.cidade, v.uf, v.status,
-              e.nome_fantasia AS empresa, MAX(h.visualizada_em) AS vistaEm
-       FROM visualizacao_vaga h
+              e.nome_fantasia AS empresa, h.vistaEm
+       FROM (
+         SELECT vaga_id, MAX(visualizada_em) AS vistaEm
+         FROM visualizacao_vaga
+         WHERE usuario_id = ?
+         GROUP BY vaga_id
+       ) AS h
        JOIN vaga v ON v.id_vaga = h.vaga_id
        JOIN empresa e ON e.id_empresa = v.empresa_id
-       WHERE h.usuario_id = ?
-       GROUP BY v.id_vaga
-       ORDER BY vistaEm DESC
+       ORDER BY h.vistaEm DESC
        LIMIT 20`,
       [req.usuario.id]
     );

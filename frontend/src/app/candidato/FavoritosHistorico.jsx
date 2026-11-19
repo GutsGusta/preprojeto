@@ -32,11 +32,12 @@ function ItemVaga({ vaga, children }) {
 export default function FavoritosHistorico() {
     const [favoritas, setFavoritas] = useState(null);
     const [vistas, setVistas] = useState(null);
-    const [erro, setErro] = useState("");
+    const [erroFavoritos, setErroFavoritos] = useState("");
+    const [erroHistorico, setErroHistorico] = useState("");
 
     useEffect(() => {
-        favoritosApi.vagas().then(setFavoritas).catch(() => setErro("Erro ao carregar favoritos."));
-        candidatoApi.historico().then(setVistas).catch(() => setErro("Erro ao carregar histórico."));
+        favoritosApi.vagas().then(setFavoritas).catch(() => setErroFavoritos("Erro ao carregar favoritos."));
+        candidatoApi.historico().then(setVistas).catch(() => setErroHistorico("Erro ao carregar histórico."));
     }, []);
 
     return (
@@ -46,8 +47,8 @@ export default function FavoritosHistorico() {
                     <h3>Vagas favoritas</h3>
                     <Link className="btn-vagas" href="/vagas">Buscar mais</Link>
                 </div>
-                {erro && <p className="erro-candidato">{erro}</p>}
-                {!favoritas && !erro && <p>Carregando...</p>}
+                {erroFavoritos && <p className="erro-candidato">{erroFavoritos}</p>}
+                {!favoritas && !erroFavoritos && <p>Carregando...</p>}
                 {favoritas?.length === 0 && <p className="texto-cinza">Toque no coração de uma vaga para guardá-la aqui.</p>}
                 <div className="lista-vagas">
                     {favoritas?.map((vaga) => (
@@ -61,7 +62,8 @@ export default function FavoritosHistorico() {
 
             <section className="painel-candidato">
                 <h3>Vistas recentemente</h3>
-                {!vistas && !erro && <p>Carregando...</p>}
+                {erroHistorico && <p className="erro-candidato">{erroHistorico}</p>}
+                {!vistas && !erroHistorico && <p>Carregando...</p>}
                 {vistas?.length === 0 && <p className="texto-cinza">As vagas que você abrir aparecem aqui.</p>}
                 <div className="lista-vagas">
                     {vistas?.map((vaga) => (

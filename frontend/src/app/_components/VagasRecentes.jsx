@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { homeApi } from '../_lib/servicos';
 import { MODALIDADE, CONTRATO, local } from '../_lib/formatar';
+import { LogoEmpresa } from './Etiquetas';
 
 // Lista as vagas mais recentes da homepage, buscando no backend (GET /api/home/vagas-recentes).
 export default function VagasRecentes() {
@@ -28,7 +29,7 @@ export default function VagasRecentes() {
         <Link key={vaga.id} href={`/vagas/${vaga.id}`}>
           <article className="card-vaga">
             <div className="txt-detalhe">
-              <img src={vaga.logoUrl || '/icon-exemplo.png'} alt="" />
+              <LogoEmpresa empresa={{ nome: vaga.empresa, logoUrl: vaga.logoUrl }} />
               <div className="txt-nome">
                 <h3>{vaga.titulo}</h3>
                 <p>{vaga.empresa}</p>
