@@ -12,7 +12,6 @@ const AREAS = ['Tecnologia', 'Dados', 'Design', 'Marketing', 'Vendas', 'Administ
 const ETAPAS_PADRAO = ['Triagem de currículo', 'Teste técnico', 'Entrevista', 'Proposta'];
 const PASSOS = ['Dados da vaga', 'Requisitos', 'Etapas de seleção'];
 
-// Em qual passo fica cada campo (para levar o usuário até o erro)
 const PASSO_DO_CAMPO = {
   titulo: 0, area: 0, nivel: 0, modalidade: 0, tipoContrato: 0, cidade: 0, uf: 0, salarioMin: 0, salarioMax: 0,
   descricao: 1, habilidades: 1, etapas: 2,

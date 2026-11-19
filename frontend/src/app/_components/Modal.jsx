@@ -3,7 +3,6 @@
 import { useEffect, useRef } from 'react';
 import { IconeFechar } from './Icones';
 
-// Janela sobreposta. Fecha com Esc ou clicando fora; foca o conteúdo ao abrir.
 export default function Modal({ titulo, subtitulo, aoFechar, children, rodape }) {
   const ref = useRef(null);
   useEffect(() => {

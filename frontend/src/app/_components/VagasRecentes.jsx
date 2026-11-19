@@ -6,7 +6,7 @@ import { homeApi } from '../_lib/servicos';
 import { MODALIDADE, CONTRATO, local } from '../_lib/formatar';
 import { LogoEmpresa } from './Etiquetas';
 
-// Lista as vagas mais recentes da homepage, buscando no backend (GET /api/home/vagas-recentes).
+// Lista as vagas mais recentes da homepage
 export default function VagasRecentes() {
   const [vagas, setVagas] = useState([]);
   const [carregando, setCarregando] = useState(true);

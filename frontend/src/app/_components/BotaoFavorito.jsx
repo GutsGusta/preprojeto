@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { favoritosApi } from '../_lib/servicos';
 import { IconeCoracao } from './Icones';
 
-// Coração que salva/remove a vaga dos favoritos (RF13). Atualiza na hora e desfaz se a API falhar.
+// Coração que salva/remove a vaga dos favoritos
 export default function BotaoFavorito({ vagaId, favorita, aoMudar, comTexto }) {
   const [ativo, setAtivo] = useState(Boolean(favorita));
   const [salvando, setSalvando] = useState(false);
