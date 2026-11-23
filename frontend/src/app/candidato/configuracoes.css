@@ -1,0 +1,91 @@
+
+.configuracoes-candidato {
+    max-width: 850px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.configuracoes-candidato section {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.configuracoes-candidato h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #171717;
+    margin: 0;
+}
+
+.configuracoes-candidato p {
+    font-size: 14px;
+    color: #666666;
+    margin: 0;
+}
+
+.configuracoes-candidato section > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.configuracoes-candidato label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333333;
+}
+
+.configuracoes-candidato input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #171717;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.configuracoes-candidato input:focus {
+    outline: none;
+    border-color: #c76522;
+    box-shadow: 0 0 0 3px rgba(199, 101, 34, 0.12);
+}
+
+.configuracoes-candidato input[type="file"] {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.configuracoes-candidato button {
+    align-self: flex-start;
+    background: #c76522;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.configuracoes-candidato button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .configuracoes-candidato section {
+        padding: 18px;
+    }
+
+    .configuracoes-candidato button {
+        width: 100%;
+    }
+}

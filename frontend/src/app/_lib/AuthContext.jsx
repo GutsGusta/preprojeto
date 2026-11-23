@@ -29,11 +29,18 @@ export function AuthProvider({ children }) {
     return usuario;
   }, []);
 
+  const atualizarUsuario = useCallback((dados) => {
+    setUsuario((anterior) =>
+      anterior ? { ...anterior, ...dados } : anterior
+    );
+  }, []);
+
   const valor = useMemo(() => ({
     usuario,
     carregando,
     entrar,
     sair,
+    atualizarUsuario,
     ehCandidato: usuario?.perfil === 'CANDIDATO',
     ehRecrutador: usuario?.perfil === 'RECRUTADOR',
     ehAdmin: usuario?.perfil === 'ADMIN',

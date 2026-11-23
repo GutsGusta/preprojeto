@@ -55,8 +55,31 @@ export const candidatoApi = {
   historico: () => api('/candidato/historico'),
 };
 
+
 export const authApi = {
-  login: (email, senha) => api('/auth/login', { metodo: 'POST', corpo: { email, senha } }),
+  login: (email, senha) =>
+    api('/auth/login', {
+      metodo: 'POST',
+      corpo: { email, senha },
+    }),
+
   eu: () => api('/auth/me'),
-  cadastrar: (dados) => api('/auth/cadastro', { metodo: 'POST', corpo: dados }),
+
+  cadastrar: (dados) =>
+    api('/auth/cadastro', {
+      metodo: 'POST',
+      corpo: dados,
+    }),
+
+  atualizarPerfil: (dados) =>
+    api('/auth/perfil', {
+      metodo: 'PUT',
+      corpo: dados,
+    }),
+
+  alterarSenha: (senhaAtual, novaSenha) =>
+    api('/auth/senha', {
+      metodo: 'PUT',
+      corpo: { senhaAtual, novaSenha },
+    }),
 };

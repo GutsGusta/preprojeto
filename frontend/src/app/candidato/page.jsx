@@ -10,12 +10,14 @@ import { MODALIDADE, CONTRATO, data, iniciais, local } from "../_lib/formatar";
 import MeuCurriculo from "./MeuCurriculo";
 import MinhasCandidaturas from "./MinhasCandidaturas";
 import FavoritosHistorico from "./FavoritosHistorico";
+import Configuracoes from "./Configuracoes";
 
 const menus = [
     "Dashboard",
     "Meu currículo",
     "Minhas candidaturas",
     "Favoritos e histórico",
+    "Configurações",
 ];
 
 const STATUS_AVANCO = ["ENTREVISTA", "APROVADA"];
@@ -105,6 +107,7 @@ function PainelCandidato() {
                             {pagina === "Meu currículo" && <MeuCurriculo aoSalvar={() => setVersao(versao + 1)} />}
                             {pagina === "Minhas candidaturas" && <MinhasCandidaturas />}
                             {pagina === "Favoritos e histórico" && <FavoritosHistorico />}
+                            {pagina === "Configurações" && <Configuracoes />}
                         </>
                     ) : (
                         <>

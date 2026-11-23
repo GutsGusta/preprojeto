@@ -314,3 +314,121 @@ export async function eu(req, res, next) {
   }
 }
 
+
+// PUT /api/auth/perfil
+export async function atualizarPerfil(req, res, next) {
+  try {
+    const usuarioId = req.usuario.id;
+
+    if (req.usuario.perfil !== "CANDIDATO") {
+      return res.status(403).json({
+        mensagem: "Esta funcionalidade está disponível apenas para candidatos."
+      });
+    }
+
+    const nome = String(req.body?.nome || "").trim();
+    const telefone = somenteNumeros(req.body?.telefone);
+
+    if (nome.length < 2 || nome.length > 150) {
+      return res.status(400).json({
+        mensagem: "O nome deve ter entre 2 e 150 caracteres."
+      });
+    }
+
+    if (telefone.length < 10 || telefone.length > 11) {
+      return res.status(400).json({
+        mensagem: "Informe um telefone válido com DDD."
+      });
+    }
+
+    const [resultado] = await pool.query(
+      `UPDATE candidato
+       SET nome = ?, telefone = ?
+       WHERE usuario_id = ?`,
+      [nome, telefone, usuarioId]
+    );
+
+    if (resultado.affectedRows === 0) {
+      return res.status(404).json({
+        mensagem: "Perfil de candidato não encontrado."
+      });
+    }
+
+    return res.json({
+      mensagem: "Informações atualizadas com sucesso.",
+      nome,
+      telefone
+    });
+  } catch (erro) {
+    next(erro);
+  }
+}
+
+// PUT /api/auth/senha
+export async function alterarSenha(req, res, next) {
+  try {
+    const usuarioId = req.usuario.id;
+
+    const senhaAtual = String(req.body?.senhaAtual || "");
+    const novaSenha = String(req.body?.novaSenha || "");
+
+    if (!senhaAtual || !novaSenha) {
+      return res.status(400).json({
+        mensagem: "Preencha a senha atual e a nova senha."
+      });
+    }
+
+    if (novaSenha.length < 8 || novaSenha.length > 128) {
+      return res.status(400).json({
+        mensagem: "A nova senha deve ter entre 8 e 128 caracteres."
+      });
+    }
+
+    const [linhas] = await pool.query(
+      `SELECT senha_hash
+       FROM usuario
+       WHERE id_usuario = ? AND ativo = 1 AND excluido_em IS NULL`,
+      [usuarioId]
+    );
+
+    if (linhas.length === 0) {
+      return res.status(404).json({
+        mensagem: "Usuário não encontrado."
+      });
+    }
+
+    const senhaCorreta = conferirSenha(
+      senhaAtual,
+      linhas[0].senha_hash
+    );
+
+    if (!senhaCorreta) {
+      return res.status(401).json({
+        erro: "SENHA_ATUAL_INCORRETA",
+        mensagem: "A senha atual está incorreta."
+      });
+    }
+
+    if (senhaAtual === novaSenha) {
+      return res.status(400).json({
+        mensagem: "A nova senha deve ser diferente da atual."
+      });
+    }
+
+    const novoHash = gerarHashSenha(novaSenha);
+
+    await pool.query(
+      `UPDATE usuario
+       SET senha_hash = ?
+       WHERE id_usuario = ?`,
+      [novoHash, usuarioId]
+    );
+
+    return res.json({
+      mensagem: "Senha alterada com sucesso."
+    });
+  } catch (erro) {
+    next(erro);
+  }
+}
+
