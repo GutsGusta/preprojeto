@@ -55,7 +55,7 @@ export default function LoginPage() {
         <div>
           <Link className="jobmatch" href="/">JobMatch</Link>
           <h2>
-            Sua próxima vaga<br />começa aqui
+            Sua próxima vaga<br/>começa aqui
           </h2>
           <p>
             Candidatos acompanham cada etapa. Empresas organizam o processo seletivo do início ao fim.

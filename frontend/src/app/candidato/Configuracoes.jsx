@@ -24,29 +24,55 @@ export default function Configuracoes() {
 
     useEffect(() => {
         if (usuario) {
-          setNome(usuario.nome || "");
-          setTelefone(usuario.telefone || "");
+            setNome(usuario.nome || "");
+            setTelefone(usuario.telefone || "");
         }
-      }, [usuario]);
+    }, [usuario]);
+
+    function converterFotoBase64(arquivo) {
+        return new Promise((resolve, reject) => {
+            const leitor = new FileReader();
+
+            leitor.onload = () => resolve(leitor.result);
+            leitor.onerror = () => reject(new Error("Erro ao ler a imagem."));
+
+            leitor.readAsDataURL(arquivo);
+        });
+    }
+
 
     async function salvarPerfil() {
         setMensagemPerfil("");
         setSalvandoPerfil(true);
 
         try {
-            const resposta = await authApi.atualizarPerfil({
+            const dados = {
                 nome: nome.trim(),
                 telefone: telefone.trim(),
+            };
+
+            if (foto) {
+                dados.foto = await converterFotoBase64(foto);
+            }
+
+            const resposta = await authApi.atualizarPerfil(dados);
+
+            atualizarUsuario({
+                nome: resposta.nome,
+                telefone: resposta.telefone,
+                ...(resposta.fotoUrl ? { fotoUrl: resposta.fotoUrl } : {}),
             });
 
-            atualizarUsuario({ nome: resposta.nome });
+            setFoto(null);
             setMensagemPerfil("Informações atualizadas com sucesso!");
+
         } catch (erro) {
             setMensagemPerfil(erro.message || "Erro ao atualizar perfil.");
         } finally {
             setSalvandoPerfil(false);
         }
     }
+
 
     async function salvarSenha() {
         setMensagemSenha("");
