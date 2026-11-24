@@ -268,14 +268,6 @@ export default function AdminDashboard() {
 
     return (
         <div className={styles.container}>
-            <header className={styles.header}>
-                <div>
-                    <strong>JobMatch</strong>
-                    <span className={styles.adminBadge}>Admin</span>
-                </div>
-                <span>Administrador</span>
-            </header>
-
             <div className={styles.layout}>
                 <aside className={styles.sidebar}>
                     {menus.map((menu) => (
