@@ -34,7 +34,16 @@ export default function Cabecalho() {
         {usuario ? (
           <>
             <Link href={painel.href} className="btn-painel" title={painel.texto}>
-              <span className="avatar-painel">{iniciais(usuario.empresaNome || usuario.nome)}</span>
+              <span className="avatar-painel">
+                {usuario.fotoUrl ? (
+                  <img
+                    src={usuario.fotoUrl}
+                    alt="Foto de perfil"
+                  />
+                ) : (
+                  iniciais(usuario.empresaNome || usuario.nome)
+                )}
+              </span>
               <span className="info-painel">
                 <strong>{usuario.empresaNome || usuario.nome}</strong>
                 <small>{painel.texto}</small>
