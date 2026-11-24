@@ -162,6 +162,96 @@
     color: #777777;
 }
 
+
+/* Últimas candidaturas recebidas */
+
+.empresa-recentes {
+    margin-top: 24px;
+}
+
+.empresa-lista-candidaturas {
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+}
+
+.empresa-item-candidatura {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 10px;
+    border-bottom: 1px solid #eeeeee;
+    text-decoration: none;
+    color: #171717;
+    transition: background 0.2s;
+    border-radius: 6px;
+}
+
+.empresa-item-candidatura:last-child {
+    border-bottom: none;
+}
+
+.empresa-item-candidatura:hover {
+    background: #fff8f2;
+}
+
+.empresa-avatar-candidato {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #fbe6cc;
+    color: #a34c08;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.empresa-candidato-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 5px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.empresa-candidato-info strong {
+    font-size: 14px;
+}
+
+.empresa-candidato-info span {
+    font-size: 13px;
+    color: #777777;
+}
+
+.empresa-candidatura-status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+.empresa-candidatura-status small {
+    font-size: 12px;
+    color: #777777;
+}
+
+@media (max-width: 600px) {
+    .empresa-item-candidatura {
+        flex-wrap: wrap;
+    }
+
+    .empresa-candidatura-status {
+        width: 100%;
+        align-items: flex-start;
+        padding-left: 56px;
+    }
+}
+
+
 @media (max-width: 768px) {
     .empresa-boas-vindas {
         flex-direction: column;

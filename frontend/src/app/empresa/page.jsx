@@ -6,7 +6,8 @@ import Link from "next/link";
 import RotaProtegida from "../_components/RotaProtegida";
 import { useAuth } from "../_lib/AuthContext";
 import { vagasApi } from "../_lib/servicos";
-import { iniciais } from "../_lib/formatar";
+import { iniciais, data } from "../_lib/formatar";
+import { StatusCandidatura } from "../_components/Etiquetas";
 import "../candidato/candidato.css";
 import "./empresa.css";
 
@@ -14,6 +15,9 @@ function PainelEmpresa() {
     const { usuario, sair } = useAuth();
 
     const [vagas, setVagas] = useState([]);
+    const [candidaturas, setCandidaturas] = useState([]);
+    const [carregandoCandidaturas, setCarregandoCandidaturas] = useState(true);
+    const [erroCandidaturas, setErroCandidaturas] = useState("");
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState("");
 
@@ -69,6 +73,73 @@ function PainelEmpresa() {
             ativo = false;
         };
     }, []);
+
+
+    useEffect(() => {
+        if (carregando || erro) return;
+
+        let ativo = true;
+
+        async function carregarCandidaturas() {
+            setCarregandoCandidaturas(true);
+            setErroCandidaturas("");
+
+            try {
+                const resultados = await Promise.all(
+                    vagas.map(async (vaga) => {
+                        const quadro = await vagasApi.candidaturas(vaga.id);
+
+                        const emAndamento = quadro.etapas.flatMap(
+                            etapa => etapa.candidaturas.map(c => ({
+                                ...c,
+                                etapaNome: etapa.nome,
+                            }))
+                        );
+
+                        const finalizadas = Object.entries(
+                            quadro.finalizadas
+                        ).flatMap(([status, lista]) =>
+                            lista.map(c => ({
+                                ...c,
+                                status,
+                            }))
+                        );
+
+                        return [...emAndamento, ...finalizadas].map(c => ({
+                            ...c,
+                            vagaId: vaga.id,
+                            vagaTitulo: vaga.titulo,
+                        }));
+                    })
+                );
+
+                const recentes = resultados
+                    .flat()
+                    .sort((a, b) =>
+                        new Date(b.enviadaEm) - new Date(a.enviadaEm)
+                    )
+                    .slice(0, 5);
+
+                if (ativo) setCandidaturas(recentes);
+
+            } catch (erro) {
+                if (ativo) {
+                    setErroCandidaturas(
+                        "Não foi possível carregar as candidaturas."
+                    );
+                }
+            } finally {
+                if (ativo) setCarregandoCandidaturas(false);
+            }
+        }
+
+        carregarCandidaturas();
+
+        return () => {
+            ativo = false;
+        };
+    }, [vagas, carregando, erro]);
+
 
     const totalVagas = vagas.length;
 
@@ -299,6 +370,65 @@ function PainelEmpresa() {
                                 </section>
 
                             </div>
+
+
+                            <section className="painel-candidato empresa-recentes">
+
+                                <h3>Últimas candidaturas recebidas</h3>
+
+                                {carregandoCandidaturas && (
+                                    <p>Carregando candidaturas...</p>
+                                )}
+
+                                {erroCandidaturas && (
+                                    <p className="erro-candidato">
+                                        {erroCandidaturas}
+                                    </p>
+                                )}
+
+                                {!carregandoCandidaturas &&
+                                    !erroCandidaturas &&
+                                    candidaturas.length === 0 && (
+                                        <p>Nenhuma candidatura recebida até o momento.</p>
+                                    )}
+
+                                <div className="empresa-lista-candidaturas">
+
+                                    {candidaturas.map(c => (
+                                        <Link
+                                            key={`${c.vagaId}-${c.id}`}
+                                            href={`/empresa/vagas/${c.vagaId}/processo`}
+                                            className="empresa-item-candidatura"
+                                        >
+                                            <span className="empresa-avatar-candidato">
+                                                {iniciais(c.candidato.nome)}
+                                            </span>
+
+                                            <div className="empresa-candidato-info">
+                                                <strong>{c.candidato.nome}</strong>
+                                                <span>{c.vagaTitulo}</span>
+                                            </div>
+
+                                            <div className="empresa-candidatura-status">
+                                                {c.status ? (
+                                                    <StatusCandidatura status={c.status} />
+                                                ) : (
+                                                    <span>{c.etapaNome}</span>
+                                                )}
+
+                                                <small>
+                                                    {c.enviadaEm
+                                                        ? data(c.enviadaEm)
+                                                        : "Data indisponível"}
+                                                </small>
+                                            </div>
+                                        </Link>
+                                    ))}
+
+                                </div>
+
+                            </section>
+
                         </>
                     )}
                 </div>
