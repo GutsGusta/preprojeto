@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../_lib/AuthContext";
 import "./configuracoes.css";
 import { authApi } from "../_lib/servicos";
@@ -10,7 +10,7 @@ export default function Configuracoes() {
     const { usuario, atualizarUsuario } = useAuth();
 
     const [nome, setNome] = useState(usuario?.nome || "");
-    const [telefone, setTelefone] = useState("");
+    const [telefone, setTelefone] = useState(usuario?.telefone || "");
     const [foto, setFoto] = useState(null);
 
     const [senhaAtual, setSenhaAtual] = useState("");
@@ -21,6 +21,13 @@ export default function Configuracoes() {
     const [salvandoSenha, setSalvandoSenha] = useState(false);
     const [mensagemPerfil, setMensagemPerfil] = useState("");
     const [mensagemSenha, setMensagemSenha] = useState("");
+
+    useEffect(() => {
+        if (usuario) {
+          setNome(usuario.nome || "");
+          setTelefone(usuario.telefone || "");
+        }
+      }, [usuario]);
 
     async function salvarPerfil() {
         setMensagemPerfil("");

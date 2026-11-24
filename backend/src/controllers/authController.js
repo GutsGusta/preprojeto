@@ -316,9 +316,30 @@ export async function eu(req, res, next) {
       });
     }
 
+
     const { exp, ...usuario } = dados;
 
+    if (usuario.perfil === "CANDIDATO") {
+      const [candidatos] = await pool.query(
+        `SELECT id_candidato, nome, telefone
+     FROM candidato
+     WHERE usuario_id = ?`,
+        [usuario.id]
+      );
+
+      if (candidatos.length === 0) {
+        return res.status(404).json({
+          mensagem: "Perfil de candidato não encontrado."
+        });
+      }
+
+      usuario.nome = candidatos[0].nome;
+      usuario.telefone = candidatos[0].telefone;
+      usuario.candidatoId = candidatos[0].id_candidato;
+    }
+
     return res.json({ usuario });
+
 
   } catch (erro) {
     next(erro);
