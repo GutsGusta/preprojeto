@@ -33,7 +33,7 @@ export default function LoginPage() {
         );
       }
 
-      const PAINEL = { ADMIN: '/admin', RECRUTADOR: '/empresa/vagas', CANDIDATO: '/candidato' };
+      const PAINEL = { ADMIN: '/admin', RECRUTADOR: '/empresa', CANDIDATO: '/candidato' };
       const AREA_DE = { '/candidato': 'CANDIDATO', '/empresa': 'RECRUTADOR', '/admin': 'ADMIN' };
 
       const voltar = new URLSearchParams(window.location.search).get('voltar');
