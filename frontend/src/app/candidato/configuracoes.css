@@ -1,4 +1,3 @@
-
 .configuracoes-candidato {
     max-width: 850px;
     display: flex;
@@ -29,7 +28,7 @@
     margin: 0;
 }
 
-.configuracoes-candidato section > div {
+.configuracoes-candidato section>div {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -79,6 +78,120 @@
     opacity: 0.55;
     cursor: not-allowed;
 }
+
+
+/* Foto de perfil nas configurações */
+
+.configuracoes-candidato .foto-configuracao {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+    padding: 20px 0;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.foto-configuracao-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #fbe6cc;
+    color: #a34c08;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.foto-configuracao-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.foto-configuracao-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    min-width: 0;
+}
+
+.foto-configuracao-info h3 {
+    font-size: 16px;
+    margin: 0;
+    color: #171717;
+}
+
+.foto-configuracao-info small {
+    font-size: 12px;
+    color: #777777;
+}
+
+.configuracoes-candidato .btn-trocar-foto {
+    display: inline-flex;
+    padding: 9px 16px;
+    border: 1px solid #C65D0A;
+    border-radius: 6px;
+    color: #C65D0A;
+    background: #ffffff;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.configuracoes-candidato .btn-trocar-foto:hover {
+    background: #fde8d0;
+}
+
+.configuracoes-candidato .input-foto-oculto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+}
+
+.btn-trocar-foto:has(+ input:disabled) {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.configuracoes-candidato .foto-configuracao:focus-within .btn-trocar-foto {
+    outline: 2px solid #C65D0A;
+    outline-offset: 3px;
+}
+
+.configuracoes-candidato .foto-pendente {
+    color: #a34c08;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.configuracoes-candidato .btn-cancelar-foto {
+    background: transparent;
+    color: #991b1b;
+    padding: 4px 0;
+    font-size: 12px;
+    width: auto;
+}
+
+@media (max-width: 600px) {
+    .configuracoes-candidato .foto-configuracao {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .foto-configuracao-info {
+        align-items: center;
+        text-align: center;
+    }
+}
+
 
 @media (max-width: 600px) {
     .configuracoes-candidato section {

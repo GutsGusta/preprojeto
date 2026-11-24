@@ -12,6 +12,7 @@ export default function Configuracoes() {
     const [nome, setNome] = useState(usuario?.nome || "");
     const [telefone, setTelefone] = useState(usuario?.telefone || "");
     const [foto, setFoto] = useState(null);
+    const [previaFoto, setPreviaFoto] = useState(null);
 
     const [senhaAtual, setSenhaAtual] = useState("");
     const [novaSenha, setNovaSenha] = useState("");
@@ -28,6 +29,18 @@ export default function Configuracoes() {
             setTelefone(usuario.telefone || "");
         }
     }, [usuario]);
+
+    useEffect(() => {
+        if (!foto) {
+            setPreviaFoto(null);
+            return;
+        }
+
+        const endereco = URL.createObjectURL(foto);
+        setPreviaFoto(endereco);
+
+        return () => URL.revokeObjectURL(endereco);
+    }, [foto]);
 
     function converterFotoBase64(arquivo) {
         return new Promise((resolve, reject) => {
@@ -125,16 +138,71 @@ export default function Configuracoes() {
             <section>
                 <h2>Informações pessoais</h2>
 
-                <div>
-                    <label htmlFor="foto-perfil">Foto de perfil</label>
-                    <input
-                        id="foto-perfil"
-                        type="file"
-                        accept="image/png,image/jpeg,image/webp"
-                        onChange={selecionarFoto}
-                    />
-                    {foto && <p>Foto selecionada: {foto.name}</p>}
+
+                <div className="foto-configuracao">
+                    <div className="foto-configuracao-avatar">
+                        {previaFoto || usuario?.fotoUrl ? (
+                            <img
+                                src={previaFoto || usuario.fotoUrl}
+                                alt="Foto de perfil"
+                            />
+                        ) : (
+                            <span>
+                                {nome.trim().split(/\s+/)
+                                    .filter(Boolean)
+                                    .slice(0, 2)
+                                    .map(palavra => palavra[0])
+                                    .join("")
+                                    .toUpperCase()}
+                            </span>
+                        )}
+                    </div>
+
+                    <div className="foto-configuracao-info">
+                        <h3>Foto de perfil</h3>
+
+                        <p>Personalize a imagem do seu perfil.</p>
+
+                        <label
+                            htmlFor="foto-perfil"
+                            className="btn-trocar-foto"
+                        >
+                            {usuario?.fotoUrl ? "Trocar foto" : "Adicionar foto"}
+                        </label>
+
+                        <input
+                            id="foto-perfil"
+                            type="file"
+                            className="input-foto-oculto"
+                            accept="image/png,image/jpeg,image/webp"
+                            disabled={salvandoPerfil}
+                            onChange={(evento) => {
+                                selecionarFoto(evento);
+                                evento.target.value = "";
+                            }}
+                        />
+
+                        <small>JPG, PNG ou WebP. Máximo de 2 MB.</small>
+
+                        {foto && (
+                            <>
+                                <p className="foto-pendente">
+                                    Nova foto selecionada. Salve as alterações.
+                                </p>
+
+                                <button
+                                    type="button"
+                                    className="btn-cancelar-foto"
+                                    disabled={salvandoPerfil}
+                                    onClick={() => setFoto(null)}
+                                >
+                                    Cancelar seleção
+                                </button>
+                            </>
+                        )}
+                    </div>
                 </div>
+
 
                 <div>
                     <label htmlFor="nome-config">Nome completo</label>
