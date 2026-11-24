@@ -14,12 +14,17 @@ function ItemMenu({ href, children }) {
 export default function Cabecalho() {
   const { usuario, ehRecrutador, ehAdmin, sair } = useAuth();
   const caminho = usePathname();
-  if (caminho === '/login' || caminho === '/cadastro' || caminho.startsWith('/candidato')) return null;
+  if (
+    caminho === '/login' ||
+    caminho === '/cadastro' ||
+    caminho.startsWith('/candidato') ||
+    caminho === '/empresa'
+  ) return null;
 
   const painel = ehAdmin
     ? { href: '/admin', texto: 'Administração' }
     : ehRecrutador
-      ? { href: '/empresa/vagas', texto: 'Minhas vagas' }
+    ? { href: '/empresa', texto: 'Meu painel' }
       : { href: '/candidato', texto: 'Meu painel' };
 
   return (
