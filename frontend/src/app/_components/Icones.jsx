@@ -9,3 +9,4 @@ export const IconeMaleta = () => (<svg {...base} width="16" height="16"><rect x=
 export const IconeVoltar = () => (<svg {...base} width="18" height="18"><path d="M15 18l-6-6 6-6" /></svg>);
 export const IconeFechar = () => (<svg {...base}><path d="M18 6 6 18M6 6l12 12" /></svg>);
 export const IconeFiltro = () => (<svg {...base} width="18" height="18"><path d="M3 5h18l-7 8v6l-4 2v-8z" /></svg>);
+export const IconeCamera = () => (<svg {...base} width="28" height="28"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z" /><circle cx="12" cy="13.5" r="3.5" /></svg>);

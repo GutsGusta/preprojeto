@@ -30,3 +30,6 @@ Thumbs.db
 
 # docker/mysql local data
 mysql-data/
+
+# fotos enviadas pelos usuários
+backend/uploads/

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../_lib/AuthContext';
 import { authApi } from '../_lib/servicos';
+import { IconeCamera } from '../_components/Icones';
 import './cadastro.css';
 
 export default function PaginaCadastro() {
@@ -24,11 +25,51 @@ function Cadastro() {
     nome: '', cpf: '', dataNascimento: '', telefone: '',
     razaoSocial: '', nomeFantasia: '', cnpj: '', setor: '', site: '',
   });
+  const [foto, setFoto] = useState('');
   const [erro, setErro] = useState('');
   const [enviando, setEnviando] = useState(false);
+  const campoFoto = useRef(null);
 
   function mudarCampo(evento) {
     setCampos({ ...campos, [evento.target.name]: evento.target.value });
+  }
+
+  function trocarAba(tipo) {
+    setActiveTab(tipo);
+    setFoto('');
+    setErro('');
+  }
+
+  function escolherFoto(evento) {
+    const arquivo = evento.target.files[0];
+    evento.target.value = '';
+    if (!arquivo) return;
+
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(arquivo.type)) {
+      setErro('A foto precisa ser uma imagem JPG, PNG ou WebP.');
+      return;
+    }
+
+    setErro('');
+    const endereco = URL.createObjectURL(arquivo);
+    const imagem = new Image();
+    imagem.onload = () => {
+      const escala = Math.min(1, 400 / Math.max(imagem.width, imagem.height));
+      const tela = document.createElement('canvas');
+      tela.width = Math.round(imagem.width * escala);
+      tela.height = Math.round(imagem.height * escala);
+      const desenho = tela.getContext('2d');
+      desenho.fillStyle = '#ffffff';
+      desenho.fillRect(0, 0, tela.width, tela.height);
+      desenho.drawImage(imagem, 0, 0, tela.width, tela.height);
+      setFoto(tela.toDataURL('image/jpeg', 0.85));
+      URL.revokeObjectURL(endereco);
+    };
+    imagem.onerror = () => {
+      setErro('Não foi possível ler essa imagem.');
+      URL.revokeObjectURL(endereco);
+    };
+    imagem.src = endereco;
   }
 
   async function enviarCadastro(evento) {
@@ -37,7 +78,7 @@ function Cadastro() {
     setEnviando(true);
 
     try {
-      await authApi.cadastrar({ ...campos, tipo: activeTab });
+      await authApi.cadastrar({ ...campos, tipo: activeTab, foto });
       const usuario = await entrar(campos.email, campos.senha);
       router.push(usuario.perfil === 'RECRUTADOR' ? '/empresa/vagas' : '/');
     } catch (falha) {
@@ -66,13 +107,13 @@ function Cadastro() {
 
           <div className="abas">
             <button
-              onClick={() => setActiveTab('candidato')}
+              onClick={() => trocarAba('candidato')}
               className={activeTab === 'candidato' ? 'ativa' : ''}
             >
               Candidato
             </button>
             <button
-              onClick={() => setActiveTab('empresa')}
+              onClick={() => trocarAba('empresa')}
               className={activeTab === 'empresa' ? 'ativa' : ''}
             >
               Empresa
@@ -85,6 +126,32 @@ function Cadastro() {
 
           <form onSubmit={enviarCadastro}>
             {erro && <p className="mensagem-erro">{erro}</p>}
+
+            <div className="grupo-foto">
+              <div className="previa-foto">
+                {foto ? <img src={foto} alt="Prévia da foto escolhida" /> : <IconeCamera />}
+              </div>
+              <div className="acoes-foto">
+                <input
+                  ref={campoFoto}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={escolherFoto}
+                  hidden
+                />
+                <div className="botoes-foto">
+                  <button type="button" className="btn-adicionar-foto" onClick={() => campoFoto.current.click()}>
+                    {foto ? 'Trocar foto' : activeTab === 'candidato' ? 'Adicionar foto' : 'Adicionar logo'}
+                  </button>
+                  {foto && (
+                    <button type="button" className="btn-remover-foto" onClick={() => setFoto('')}>
+                      Remover
+                    </button>
+                  )}
+                </div>
+                <span className="dica-foto">Opcional · JPG, PNG ou WebP</span>
+              </div>
+            </div>
 
             <div className="grupo-campo">
               <label>E-mail</label>

@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import { pool } from "../config/database.js";
+import { salvarImagem, apagarImagem } from "../utils/imagens.js";
 
 // Segredo usado para assinar o token de login. Defina JWT_SECRET no .env do backend.
 const segredo = process.env.JWT_SECRET || "segredo-de-desenvolvimento";
@@ -145,6 +146,15 @@ export async function cadastrar(req, res, next) {
     }
   }
 
+  // Foto opcional: foto do candidato ou logo da empresa (salva em foto_url / logo_url)
+  let fotoUrl = null;
+  try {
+    fotoUrl = salvarImagem(dados.foto, req);
+  } catch (erro) {
+    if (erro.status === 400) return res.status(400).json({ mensagem: erro.message });
+    return next(erro);
+  }
+
   // Usa uma conexão só para salvar tudo junto: se algo falhar, nada fica salvo pela metade
   const conexao = await pool.getConnection();
 
@@ -159,15 +169,15 @@ export async function cadastrar(req, res, next) {
 
     if (tipo === "candidato") {
       await conexao.query(
-        `INSERT INTO candidato (usuario_id, nome, cpf, data_nascimento, telefone, cidade, uf)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [usuario.insertId, nome, cpf, dados.dataNascimento, telefone, cidade, uf]
+        `INSERT INTO candidato (usuario_id, nome, cpf, data_nascimento, telefone, cidade, uf, foto_url)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [usuario.insertId, nome, cpf, dados.dataNascimento, telefone, cidade, uf, fotoUrl]
       );
     } else {
       const [empresa] = await conexao.query(
-        `INSERT INTO empresa (razao_social, nome_fantasia, cnpj, setor, site, cidade, uf)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [razaoSocial, nomeFantasia, cnpj, setor, site || null, cidade, uf]
+        `INSERT INTO empresa (razao_social, nome_fantasia, cnpj, setor, site, logo_url, cidade, uf)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [razaoSocial, nomeFantasia, cnpj, setor, site || null, fotoUrl, cidade, uf]
       );
 
       // A conta da empresa é o primeiro recrutador (administrador) dela
@@ -182,6 +192,7 @@ export async function cadastrar(req, res, next) {
     return res.status(201).json({ mensagem: "Conta criada com sucesso." });
   } catch (erro) {
     await conexao.rollback();
+    apagarImagem(fotoUrl); // não deixa a foto sobrando se o cadastro não foi salvo
 
     // Erro do MySQL para valor repetido em coluna única (e-mail, CPF ou CNPJ)
     if (erro.code === "ER_DUP_ENTRY") {

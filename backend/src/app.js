@@ -13,6 +13,7 @@ import candidaturasRoutes from "./routes/candidaturasRoutes.js";
 import favoritosRoutes from "./routes/favoritosRoutes.js";
 import habilidadesRoutes from "./routes/habilidadesRoutes.js";
 import empresasRoutes from "./routes/empresasRoutes.js";
+import { pastaUploads } from "./utils/imagens.js";
 
 const app = express();
 
@@ -31,7 +32,18 @@ app.use(
 );
 
 
-app.use(express.json());
+// Limite maior que o padrão porque a foto do cadastro viaja em base64 dentro do JSON
+app.use(express.json({ limit: "3mb" }));
+
+// Fotos enviadas (candidatos e empresas). O cabeçalho libera o uso da imagem pelo frontend (outra porta).
+app.use(
+  "/uploads",
+  (request, response, next) => {
+    response.set("Cross-Origin-Resource-Policy", "cross-origin");
+    next();
+  },
+  express.static(pastaUploads)
+);
 
 app.get("/", (request, response) => {
   response.json({
