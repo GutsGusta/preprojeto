@@ -1,6 +1,7 @@
 "use client";
 
 import React, { Suspense, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../_lib/AuthContext';
 import { authApi } from '../_lib/servicos';
@@ -92,7 +93,7 @@ function Cadastro() {
     <div className="pagina-login">
       <div className="painel-lateral">
         <div>
-          <h1>JobMatch</h1>
+        <Link className="jobmatch" href="/">JobMatch</Link>
           <h2>
             Junte-se a nós<br />e comece agora
           </h2>

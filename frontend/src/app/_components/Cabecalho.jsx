@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '../_lib/AuthContext';
+import { iniciais } from '../_lib/formatar';
 
 function ItemMenu({ href, children }) {
   const caminho = usePathname();
@@ -11,9 +12,15 @@ function ItemMenu({ href, children }) {
 }
 
 export default function Cabecalho() {
-  const { usuario, ehCandidato, ehRecrutador, ehAdmin, sair } = useAuth();
+  const { usuario, ehRecrutador, ehAdmin, sair } = useAuth();
   const caminho = usePathname();
   if (caminho === '/login' || caminho === '/cadastro' || caminho.startsWith('/candidato')) return null;
+
+  const painel = ehAdmin
+    ? { href: '/admin', texto: 'Administração' }
+    : ehRecrutador
+      ? { href: '/empresa/vagas', texto: 'Minhas vagas' }
+      : { href: '/candidato', texto: 'Meu painel' };
 
   return (
     <header className="cabecalho">
@@ -21,14 +28,18 @@ export default function Cabecalho() {
       <nav className="cabecalho-btn">
         <ItemMenu href="/vagas">Vagas</ItemMenu>
         <ItemMenu href="/empresas">Empresas</ItemMenu>
-        {ehRecrutador ? <ItemMenu href="/empresa/vagas">Minhas vagas</ItemMenu> : <ItemMenu href="/para-empresas">Para empresas</ItemMenu>}
+        {!ehRecrutador && <ItemMenu href="/para-empresas">Para empresas</ItemMenu>}
       </nav>
       <div className="btn-login">
         {usuario ? (
           <>
-            {ehCandidato && <Link href="/candidato">Meu painel</Link>}
-            {ehAdmin && <Link href="/admin">Painel</Link>}
-            <span>{usuario.nome}</span>
+            <Link href={painel.href} className="btn-painel" title={painel.texto}>
+              <span className="avatar-painel">{iniciais(usuario.empresaNome || usuario.nome)}</span>
+              <span className="info-painel">
+                <strong>{usuario.empresaNome || usuario.nome}</strong>
+                <small>{painel.texto}</small>
+              </span>
+            </Link>
             <Link href="/" className="entrar" onClick={sair}>Sair</Link>
           </>
         ) : (
