@@ -19,17 +19,24 @@
   justify-content: space-between;
 }
 
+.painel-lateral .jobmatch {
+  display: inline-block;
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+  margin-bottom: 8rem;
+}
+
+.painel-lateral .jobmatch:hover {
+  color: #fbe6cc;
+}
+
 @media (min-width: 1024px) {
   .painel-lateral {
     display: flex;
     width: 45%;
   }
-}
-
-.painel-lateral h1 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 8rem;
 }
 
 .painel-lateral h2 {

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../_lib/AuthContext';
 import './login.css';
@@ -53,7 +54,7 @@ export default function LoginPage() {
     <div className="pagina-login">
       <div className="painel-lateral">
         <div>
-          <h1>JobMatch</h1>
+          <Link className="jobmatch" href="/">JobMatch</Link>
           <h2>
             Sua próxima vaga<br />começa aqui
           </h2>
@@ -89,18 +90,7 @@ export default function LoginPage() {
             {erro && <p className="mensagem-erro">{erro}</p>}
 
             <div className="grupo-campo">
-              <label>{activeTab === 'empresa' ? 'E-mail corporativo' : 'E-mail'}</label>
-              <input
-                type="email"
-                placeholder={activeTab === 'empresa' ? 'empresa@dominio.com' : 'voce@email.com'}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="grupo-campo">
-              <label>Senha</label>
+            <label>Senha</label>
               <input
                 type="password"
                 placeholder="Mínimo de 8 caracteres"
@@ -116,7 +106,7 @@ export default function LoginPage() {
           </form>
 
           <div className="link-conta">
-            Ainda não tem conta? <a href="/cadastro">Cadastre-se</a>
+            Ainda não tem conta? <Link href="/cadastro">Cadastre-se</Link>
           </div>
 
         </div>
