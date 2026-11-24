@@ -81,7 +81,16 @@ function PainelCandidato() {
             <header className="cabecalho-candidato">
                 <Link href="/" className="logo-candidato">JobMatch</Link>
                 <div className="usuario-candidato">
-                    <span className="avatar-candidato">{iniciais(usuario.nome)}</span>
+                    <span className="avatar-candidato">
+                        {usuario.fotoUrl ? (
+                            <img
+                                src={usuario.fotoUrl}
+                                alt="Foto de perfil"
+                            />
+                        ) : (
+                            iniciais(usuario.nome)
+                        )}
+                    </span>
                     <span>{usuario.nome}</span>
                     <Link href="/" className="btn-sair" onClick={sair}>Sair</Link>
                 </div>

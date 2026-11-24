@@ -225,7 +225,7 @@ export async function entrar(req, res, next) {
     // Busca o usuário e os dados dele (que ficam nas tabelas candidato, recrutador e empresa)
     const [linhas] = await pool.query(
       `SELECT u.id_usuario, u.email, u.senha_hash, u.perfil, u.ativo, u.excluido_em,
-              c.id_candidato, c.nome AS nome_candidato,
+              c.id_candidato, c.nome AS nome_candidato, c.telefone, c.foto_url,
               r.id_recrutador, r.nome AS nome_recrutador, r.empresa_id,
               e.nome_fantasia AS empresa_nome
          FROM usuario u
@@ -260,6 +260,8 @@ export async function entrar(req, res, next) {
       perfil: linha.perfil,
       nome: linha.nome_candidato || linha.nome_recrutador || "Administrador",
       candidatoId: linha.id_candidato,
+      telefone: linha.telefone,
+      fotoUrl: linha.foto_url,
       recrutadorId: linha.id_recrutador,
       empresaId: linha.empresa_id,
       empresaNome: linha.empresa_nome,
@@ -321,7 +323,7 @@ export async function eu(req, res, next) {
 
     if (usuario.perfil === "CANDIDATO") {
       const [candidatos] = await pool.query(
-        `SELECT id_candidato, nome, telefone
+        `SELECT id_candidato, nome, telefone, foto_url
      FROM candidato
      WHERE usuario_id = ?`,
         [usuario.id]
@@ -336,6 +338,7 @@ export async function eu(req, res, next) {
       usuario.nome = candidatos[0].nome;
       usuario.telefone = candidatos[0].telefone;
       usuario.candidatoId = candidatos[0].id_candidato;
+      usuario.fotoUrl = candidatos[0].foto_url;
     }
 
     return res.json({ usuario });
@@ -347,8 +350,11 @@ export async function eu(req, res, next) {
 }
 
 
+
 // PUT /api/auth/perfil
 export async function atualizarPerfil(req, res, next) {
+  let novaFotoUrl = null;
+
   try {
     const usuarioId = req.usuario.id;
 
@@ -373,14 +379,21 @@ export async function atualizarPerfil(req, res, next) {
       });
     }
 
+    if (req.body?.foto) {
+      novaFotoUrl = salvarImagem(req.body.foto, req);
+    }
+
     const [resultado] = await pool.query(
       `UPDATE candidato
-       SET nome = ?, telefone = ?
+       SET nome = ?, telefone = ?,
+           foto_url = COALESCE(?, foto_url)
        WHERE usuario_id = ?`,
-      [nome, telefone, usuarioId]
+      [nome, telefone, novaFotoUrl, usuarioId]
     );
 
     if (resultado.affectedRows === 0) {
+      apagarImagem(novaFotoUrl);
+
       return res.status(404).json({
         mensagem: "Perfil de candidato não encontrado."
       });
@@ -389,12 +402,23 @@ export async function atualizarPerfil(req, res, next) {
     return res.json({
       mensagem: "Informações atualizadas com sucesso.",
       nome,
-      telefone
+      telefone,
+      ...(novaFotoUrl ? { fotoUrl: novaFotoUrl } : {})
     });
+
   } catch (erro) {
+    apagarImagem(novaFotoUrl);
+
+    if (erro.status === 400) {
+      return res.status(400).json({
+        mensagem: erro.message
+      });
+    }
+
     next(erro);
   }
 }
+
 
 // PUT /api/auth/senha
 export async function alterarSenha(req, res, next) {
