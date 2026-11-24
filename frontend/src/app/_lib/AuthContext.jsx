@@ -10,22 +10,30 @@ export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
   const [carregando, setCarregando] = useState(true);
 
-  const sair = useCallback(() => {
+  const [saiu, setSaiu] = useState(false);
+
+  const encerrarSessao = useCallback(() => {
     tokenSalvo.apagar();
     setUsuario(null);
   }, []);
 
+  const sair = useCallback(() => {
+    encerrarSessao();
+    setSaiu(true);
+  }, [encerrarSessao]);
+
   // Ao abrir o site, confere se o token salvo ainda vale
   useEffect(() => {
-    quandoSessaoExpirar(sair);
+    quandoSessaoExpirar(encerrarSessao);
     const pedido = tokenSalvo.ler() ? authApi.eu().then(({ usuario }) => setUsuario(usuario)) : Promise.resolve();
-    pedido.catch(sair).finally(() => setCarregando(false));
-  }, [sair]);
+    pedido.catch(encerrarSessao).finally(() => setCarregando(false));
+  }, [encerrarSessao]);
 
   const entrar = useCallback(async (email, senha) => {
     const { token, usuario } = await authApi.login(email, senha);
     tokenSalvo.gravar(token);
     setUsuario(usuario);
+    setSaiu(false);
     return usuario;
   }, []);
 
@@ -38,13 +46,13 @@ export function AuthProvider({ children }) {
   const valor = useMemo(() => ({
     usuario,
     carregando,
+    saiu,
     entrar,
     sair,
-    atualizarUsuario,
     ehCandidato: usuario?.perfil === 'CANDIDATO',
     ehRecrutador: usuario?.perfil === 'RECRUTADOR',
     ehAdmin: usuario?.perfil === 'ADMIN',
-  }), [usuario, carregando, entrar, sair]);
+  }), [usuario, carregando, saiu, entrar, sair]);
 
   return <AuthContext.Provider value={valor}>{children}</AuthContext.Provider>;
 }

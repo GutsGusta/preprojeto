@@ -33,16 +33,15 @@ export default function LoginPage() {
         );
       }
 
+      const PAINEL = { ADMIN: '/admin', RECRUTADOR: '/empresa/vagas', CANDIDATO: '/candidato' };
+      const AREA_DE = { '/candidato': 'CANDIDATO', '/empresa': 'RECRUTADOR', '/admin': 'ADMIN' };
+
       const voltar = new URLSearchParams(window.location.search).get('voltar');
-      if (voltar && voltar.startsWith('/') && !voltar.startsWith('//')) {
-        router.push(voltar);
-      } else if (usuario.perfil === 'ADMIN') {
-        router.push('/admin');
-      } else if (usuario.perfil === 'RECRUTADOR') {
-        router.push('/empresa/vagas');
-      } else {
-        router.push('/candidato');
-      }
+      const area = voltar && Object.keys(AREA_DE).find((a) => voltar === a || voltar.startsWith(`${a}/`));
+      const voltarServe = voltar && voltar.startsWith('/') && !voltar.startsWith('//')
+        && (!area || AREA_DE[area] === usuario.perfil || usuario.perfil === 'ADMIN');
+
+      router.replace(voltarServe ? voltar : PAINEL[usuario.perfil]);
     } catch (falha) {
       setErro(falha.message);
     } finally {

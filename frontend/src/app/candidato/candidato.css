@@ -49,9 +49,23 @@
 }
 
 .btn-sair {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+    border: solid 1px #C65D0A;
+    border-radius: 5px;
+    padding: 7px 14px;
+    background: #fff;
     color: #C65D0A;
-    text-decoration: underline;
-    font-weight: 400;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-sair:hover {
+    background: #fbe6cc;
+    color: #C65D0A;
 }
 
 .layout-candidato {
