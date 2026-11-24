@@ -56,7 +56,7 @@ export default function LoginPage() {
         <div>
           <Link className="jobmatch" href="/">JobMatch</Link>
           <h2>
-            Sua próxima vaga<br />começa aqui
+            Sua próxima vaga<br/>começa aqui
           </h2>
           <p>
             Candidatos acompanham cada etapa. Empresas organizam o processo seletivo do início ao fim.
@@ -88,6 +88,17 @@ export default function LoginPage() {
 
           <form onSubmit={enviarLogin}>
             {erro && <p className="mensagem-erro">{erro}</p>}
+
+            <div className="grupo-campo">
+              <label>{activeTab === 'empresa' ? 'E-mail corporativo' : 'E-mail'}</label>
+              <input
+                type="email"
+                placeholder={activeTab === 'empresa' ? 'empresa@dominio.com' : 'voce@email.com'}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
 
             <div className="grupo-campo">
             <label>Senha</label>
