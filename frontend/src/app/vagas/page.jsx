@@ -85,7 +85,13 @@ function ListaVagas() {
           <form role="search" onSubmit={(e) => { e.preventDefault(); mudar({ q: busca.trim() }); }}>
             <label className="sr-only" htmlFor="busca">Cargo, palavra-chave ou empresa</label>
             <input id="busca" className="input" type="search" placeholder="Cargo, palavra-chave ou empresa"
-              value={busca} onChange={(e) => setBusca(e.target.value)} />
+              value={busca} onChange={(e) => {
+                const valor = e.target.value;
+                setBusca(valor);
+                if (valor.trim() === '' && filtros.q !== '') {
+                  mudar({ q: '' });
+                }
+              }} />
             <button type="submit" className="botao"><IconeLupa />Buscar</button>
           </form>
         </div>
