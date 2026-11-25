@@ -71,7 +71,7 @@ function MinhasVagas() {
   const visiveis = vagas?.filter((v) => v.titulo.toLowerCase().includes(busca.trim().toLowerCase()));
 
   return (
-    <div className="container pagina pilha" style={{ gap: 20 }}>
+    <div className="pilha" style={{ gap: 20, width: '100%', minWidth: 0 }}>
       <div className="linha entre">
         <h1>Minhas vagas</h1>
         <Link href="/empresa/vagas/nova" className="botao">+ Nova vaga</Link>

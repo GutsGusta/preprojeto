@@ -18,13 +18,14 @@ export default function Cabecalho() {
     caminho === '/login' ||
     caminho === '/cadastro' ||
     caminho.startsWith('/candidato') ||
-    caminho === '/empresa'
+    caminho === '/empresa' ||
+    caminho.startsWith('/empresa/')
   ) return null;
 
   const painel = ehAdmin
     ? { href: '/admin', texto: 'Administração' }
     : ehRecrutador
-    ? { href: '/empresa', texto: 'Meu painel' }
+      ? { href: '/empresa', texto: 'Meu painel' }
       : { href: '/candidato', texto: 'Meu painel' };
 
   return (
@@ -34,6 +35,7 @@ export default function Cabecalho() {
         <ItemMenu href="/vagas">Vagas</ItemMenu>
         <ItemMenu href="/empresas">Empresas</ItemMenu>
         {!ehRecrutador && <ItemMenu href="/para-empresas">Para empresas</ItemMenu>}
+        <ItemMenu href="/contato">Contato</ItemMenu>
       </nav>
       <div className="btn-login">
         {usuario ? (

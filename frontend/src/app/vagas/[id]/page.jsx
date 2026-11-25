@@ -10,6 +10,7 @@ import { LogoEmpresa, Match, StatusCandidatura, StatusVaga } from '@/app/_compon
 import BotaoFavorito from '@/app/_components/BotaoFavorito';
 import Modal from '@/app/_components/Modal';
 import { IconeVoltar } from '@/app/_components/Icones';
+import './detalhe-vaga.css';
 import { MODALIDADE, CONTRATO, FINAIS, faixaSalarial, local, data, haQuantoTempo } from '@/app/_lib/formatar';
 
 export default function DetalheVaga() {
@@ -99,14 +100,38 @@ export default function DetalheVaga() {
       <Aviso>{erro}</Aviso>
 
       {minha && (
-        <div className="aviso info linha entre">
-          <span>
-            Você se candidatou {haQuantoTempo(minha.enviadaEm)}. Situação: <StatusCandidatura status={minha.status} />
-            {!FINAIS.includes(minha.status) && <> · etapa atual: <strong>{minha.etapa}</strong></>}
-          </span>
+        <div className="aviso-candidatura">
+
+          <div className="aviso-candidatura-info">
+            <h3>Você se candidatou a esta vaga</h3>
+
+            <p>
+              Candidatura enviada {haQuantoTempo(minha.enviadaEm)}.
+            </p>
+
+            <div className="aviso-candidatura-status">
+              <span>Situação:</span>
+
+              <StatusCandidatura status={minha.status} />
+
+              {!FINAIS.includes(minha.status) && minha.etapa && (
+                <span>
+                  · Etapa atual: <strong>{minha.etapa}</strong>
+                </span>
+              )}
+            </div>
+          </div>
+
           {!FINAIS.includes(minha.status) && (
-            <button type="button" className="botao perigo pequeno" onClick={desistir}>Desistir</button>
+            <button
+              type="button"
+              className="botao perigo pequeno btn-desistir-vaga"
+              onClick={desistir}
+            >
+              Desistir da vaga
+            </button>
           )}
+
         </div>
       )}
 
