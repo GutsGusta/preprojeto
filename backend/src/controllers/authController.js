@@ -227,7 +227,16 @@ export async function entrar(req, res, next) {
       `SELECT u.id_usuario, u.email, u.senha_hash, u.perfil, u.ativo, u.excluido_em,
               c.id_candidato, c.nome AS nome_candidato, c.telefone, c.foto_url,
               r.id_recrutador, r.nome AS nome_recrutador, r.empresa_id,
-              e.nome_fantasia AS empresa_nome
+              e.nome_fantasia AS empresa_nome,
+              e.logo_url AS empresa_logo,
+              e.razao_social,
+              e.setor,
+              e.site,
+              e.descricao,
+              e.cidade AS empresa_cidade,
+              e.uf AS empresa_uf,
+              e.cnpj,
+              r.admin_empresa
          FROM usuario u
          LEFT JOIN candidato c ON c.usuario_id = u.id_usuario
          LEFT JOIN recrutador r ON r.usuario_id = u.id_usuario
@@ -261,10 +270,20 @@ export async function entrar(req, res, next) {
       nome: linha.nome_candidato || linha.nome_recrutador || "Administrador",
       candidatoId: linha.id_candidato,
       telefone: linha.telefone,
-      fotoUrl: linha.foto_url,
+      fotoUrl: linha.perfil === "RECRUTADOR"
+        ? linha.empresa_logo
+        : linha.foto_url,
       recrutadorId: linha.id_recrutador,
       empresaId: linha.empresa_id,
       empresaNome: linha.empresa_nome,
+      razaoSocial: linha.razao_social,
+      setor: linha.setor,
+      site: linha.site,
+      descricao: linha.descricao,
+      cidade: linha.empresa_cidade,
+      uf: linha.empresa_uf,
+      cnpj: linha.cnpj,
+      adminEmpresa: Boolean(linha.admin_empresa),
     };
 
     return res.json({ token: criarToken(usuario), usuario });
@@ -341,6 +360,54 @@ export async function eu(req, res, next) {
       usuario.fotoUrl = candidatos[0].foto_url;
     }
 
+    if (usuario.perfil === "RECRUTADOR") {
+  const [empresas] = await pool.query(
+    `SELECT
+        r.id_recrutador,
+        r.nome,
+        r.admin_empresa,
+        e.id_empresa,
+        e.nome_fantasia,
+        e.razao_social,
+        e.cnpj,
+        e.setor,
+        e.site,
+        e.descricao,
+        e.cidade,
+        e.uf,
+        e.logo_url
+     FROM recrutador r
+     INNER JOIN empresa e
+        ON e.id_empresa = r.empresa_id
+     WHERE r.usuario_id = ?
+       AND e.ativo = 1
+       AND e.excluido_em IS NULL`,
+    [usuario.id]
+  );
+
+  if (empresas.length === 0) {
+    return res.status(404).json({
+      mensagem: "Perfil de empresa não encontrado."
+    });
+  }
+
+  const empresa = empresas[0];
+
+  usuario.nome = empresa.nome;
+  usuario.recrutadorId = empresa.id_recrutador;
+  usuario.empresaId = empresa.id_empresa;
+  usuario.empresaNome = empresa.nome_fantasia;
+  usuario.razaoSocial = empresa.razao_social;
+  usuario.cnpj = empresa.cnpj;
+  usuario.setor = empresa.setor;
+  usuario.site = empresa.site;
+  usuario.descricao = empresa.descricao;
+  usuario.cidade = empresa.cidade;
+  usuario.uf = empresa.uf;
+  usuario.fotoUrl = empresa.logo_url;
+  usuario.adminEmpresa = Boolean(empresa.admin_empresa);
+}
+
     return res.json({ usuario });
 
 
@@ -357,6 +424,81 @@ export async function atualizarPerfil(req, res, next) {
 
   try {
     const usuarioId = req.usuario.id;
+
+    if (req.usuario.perfil === "RECRUTADOR") {
+  const nomeFantasia = String(req.body?.nomeFantasia || "").trim();
+  const razaoSocial = String(req.body?.razaoSocial || "").trim();
+  const setor = String(req.body?.setor || "").trim();
+  const site = String(req.body?.site || "").trim();
+  const descricao = String(req.body?.descricao || "").trim();
+  const cidade = String(req.body?.cidade || "").trim();
+  const uf = String(req.body?.uf || "").trim().toUpperCase();
+
+  if (!nomeFantasia || !razaoSocial || !setor || !cidade) {
+    return res.status(400).json({
+      mensagem: "Preencha todos os campos obrigatórios."
+    });
+  }
+
+  if (!/^[A-Z]{2}$/.test(uf)) {
+    return res.status(400).json({
+      mensagem: "Informe uma UF válida."
+    });
+  }
+
+  if (req.body?.foto) {
+    novaFotoUrl = salvarImagem(req.body.foto, req);
+  }
+
+  const [resultado] = await pool.query(
+    `UPDATE empresa e
+     INNER JOIN recrutador r
+       ON r.empresa_id = e.id_empresa
+     SET e.nome_fantasia = ?,
+         e.razao_social = ?,
+         e.setor = ?,
+         e.site = ?,
+         e.descricao = ?,
+         e.cidade = ?,
+         e.uf = ?,
+         e.logo_url = COALESCE(?, e.logo_url)
+     WHERE r.usuario_id = ?
+       AND r.admin_empresa = 1
+       AND e.ativo = 1
+       AND e.excluido_em IS NULL`,
+    [
+      nomeFantasia,
+      razaoSocial,
+      setor,
+      site || null,
+      descricao || null,
+      cidade,
+      uf,
+      novaFotoUrl,
+      usuarioId
+    ]
+  );
+
+  if (resultado.affectedRows === 0) {
+    apagarImagem(novaFotoUrl);
+
+    return res.status(403).json({
+      mensagem: "Não foi possível atualizar os dados da empresa."
+    });
+  }
+
+  return res.json({
+    mensagem: "Informações atualizadas com sucesso.",
+    empresaNome: nomeFantasia,
+    razaoSocial,
+    setor,
+    site,
+    descricao,
+    cidade,
+    uf,
+    ...(novaFotoUrl ? { fotoUrl: novaFotoUrl } : {})
+  });
+}
 
     if (req.usuario.perfil !== "CANDIDATO") {
       return res.status(403).json({

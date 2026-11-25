@@ -239,6 +239,28 @@
     color: #777777;
 }
 
+.dashboard-empresa .configuracoes-candidato textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+}
+
+.dashboard-empresa .configuracoes-candidato input:disabled,
+.dashboard-empresa .configuracoes-candidato textarea:disabled {
+    background-color: #f3f3f3;
+    cursor: not-allowed;
+}
+
+.dashboard-empresa .configuracoes-candidato textarea:focus {
+    outline: none;
+    border-color: #c76522;
+}
+
 @media (max-width: 600px) {
     .empresa-item-candidatura {
         flex-wrap: wrap;
