@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../_lib/AuthContext";
 import { authApi } from "../_lib/servicos";
 import "../candidato/configuracoes.css";
+import CampoSenha from "../_components/CampoSenha";
+import { ESTADOS } from '../_lib/estados';
 
 export default function Configuracoes() {
     const { usuario, atualizarUsuario } = useAuth();
@@ -95,6 +97,32 @@ export default function Configuracoes() {
         }
 
         setFoto(arquivo);
+    }
+
+    async function removerFoto() {
+        if (!window.confirm("Deseja remover esta imagem?")) {
+            return;
+        }
+
+        setSalvandoPerfil(true);
+        setMensagemPerfil("");
+
+        try {
+            await authApi.atualizarPerfil({
+                removerFoto: true
+            });
+
+            atualizarUsuario({ fotoUrl: null });
+            setFoto(null);
+            setMensagemPerfil("Imagem removida com sucesso!");
+
+        } catch (erro) {
+            setMensagemPerfil(
+                erro.message || "Erro ao remover imagem."
+            );
+        } finally {
+            setSalvandoPerfil(false);
+        }
     }
 
     async function salvarPerfil() {
@@ -247,6 +275,17 @@ export default function Configuracoes() {
                                     }}
                                 />
 
+                                {podeEditar && usuario?.fotoUrl && (
+                                    <button
+                                        type="button"
+                                        className="btn-remover-imagem"
+                                        onClick={removerFoto}
+                                        disabled={salvandoPerfil}
+                                    >
+                                        Remover logotipo
+                                    </button>
+                                )}
+
                                 <small>
                                     JPG, PNG ou WebP. Máximo de 2 MB.
                                 </small>
@@ -281,21 +320,33 @@ export default function Configuracoes() {
                             {campo.label}
                         </label>
 
-                        <input
-                            id={campo.nome}
-                            type="text"
-                            value={dados[campo.nome]}
-                            maxLength={campo.maxLength}
-                            disabled={!podeEditar || salvandoPerfil}
-                            onChange={e =>
-                                alterarCampo(
-                                    campo.nome,
-                                    campo.nome === "uf"
-                                        ? e.target.value.toUpperCase()
-                                        : e.target.value
-                                )
-                            }
-                        />
+                        {campo.nome === "uf" ? (
+                            <select
+                                id={campo.nome}
+                                value={dados.uf}
+                                disabled={!podeEditar || salvandoPerfil}
+                                onChange={e => alterarCampo("uf", e.target.value)}
+                            >
+                                <option value="">Selecione</option>
+
+                                {ESTADOS.map(uf => (
+                                    <option key={uf} value={uf}>
+                                        {uf}
+                                    </option>
+                                ))}
+                            </select>
+                        ) : (
+                            <input
+                                id={campo.nome}
+                                type="text"
+                                value={dados[campo.nome]}
+                                maxLength={campo.maxLength}
+                                disabled={!podeEditar || salvandoPerfil}
+                                onChange={e =>
+                                    alterarCampo(campo.nome, e.target.value)
+                                }
+                            />
+                        )}
 
                     </div>
                 ))}
@@ -362,9 +413,8 @@ export default function Configuracoes() {
                 <div>
                     <label htmlFor="senha-atual">Senha atual</label>
 
-                    <input
+                    <CampoSenha
                         id="senha-atual"
-                        type="password"
                         value={senhaAtual}
                         onChange={e => setSenhaAtual(e.target.value)}
                     />

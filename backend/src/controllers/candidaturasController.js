@@ -191,7 +191,7 @@ export async function listarCandidaturasDaVaga(req, res, next) {
     );
     const [linhas] = await pool.query(
       `SELECT c.id_candidatura, c.candidato_id, c.etapa_atual_id, c.status, c.criada_em, c.atualizada_em,
-              ca.nome, ca.cidade, ca.uf
+              ca.nome, ca.cidade, ca.uf, ca.foto_url
        FROM candidatura c
        JOIN candidato ca ON ca.id_candidato = c.candidato_id
        WHERE c.vaga_id = ?
@@ -204,7 +204,13 @@ export async function listarCandidaturasDaVaga(req, res, next) {
 
     const cartao = (l) => ({
       id: l.id_candidatura,
-      candidato: { id: l.candidato_id, nome: l.nome, cidade: l.cidade, uf: l.uf },
+      candidato: {
+      id: l.candidato_id,
+      nome: l.nome,
+      cidade: l.cidade,
+      uf: l.uf,
+      fotoUrl: l.foto_url,
+},
       status: l.status,
       etapaId: l.etapa_atual_id ?? etapas[0]?.id ?? null,
       match: calcularMatch(perfis.get(l.candidato_id), vaga),

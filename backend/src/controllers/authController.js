@@ -424,6 +424,49 @@ export async function atualizarPerfil(req, res, next) {
 
   try {
     const usuarioId = req.usuario.id;
+    if (req.body?.removerFoto === true) {
+    if (req.usuario.perfil === "CANDIDATO") {
+        const [resultado] = await pool.query(
+            "UPDATE candidato SET foto_url = NULL WHERE usuario_id = ?",
+            [usuarioId]
+        );
+
+        if (!resultado.affectedRows) {
+            return res.status(404).json({
+                mensagem: "Candidato não encontrado."
+            });
+        }
+
+    } else if (req.usuario.perfil === "RECRUTADOR") {
+        const [resultado] = await pool.query(
+            `UPDATE empresa e
+             INNER JOIN recrutador r
+                ON r.empresa_id = e.id_empresa
+             SET e.logo_url = NULL
+             WHERE r.usuario_id = ?
+                AND r.admin_empresa = 1
+                AND e.ativo = 1
+                AND e.excluido_em IS NULL`,
+            [usuarioId]
+        );
+
+        if (!resultado.affectedRows) {
+            return res.status(403).json({
+                mensagem: "Sem permissão para remover o logotipo."
+            });
+        }
+
+    } else {
+        return res.status(403).json({
+            mensagem: "Operação não permitida."
+        });
+    }
+
+    return res.json({
+        mensagem: "Imagem removida com sucesso.",
+        fotoUrl: null
+    });
+}
 
     if (req.usuario.perfil === "RECRUTADOR") {
   const nomeFantasia = String(req.body?.nomeFantasia || "").trim();
@@ -433,6 +476,9 @@ export async function atualizarPerfil(req, res, next) {
   const descricao = String(req.body?.descricao || "").trim();
   const cidade = String(req.body?.cidade || "").trim();
   const uf = String(req.body?.uf || "").trim().toUpperCase();
+  const UFS_VALIDAS = new Set(
+    "AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO".split(" ")
+);
 
   if (!nomeFantasia || !razaoSocial || !setor || !cidade) {
     return res.status(400).json({
@@ -440,7 +486,7 @@ export async function atualizarPerfil(req, res, next) {
     });
   }
 
-  if (!/^[A-Z]{2}$/.test(uf)) {
+  if (!UFS_VALIDAS.has(uf)) {
     return res.status(400).json({
       mensagem: "Informe uma UF válida."
     });

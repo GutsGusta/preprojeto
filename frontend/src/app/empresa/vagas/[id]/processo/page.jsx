@@ -90,7 +90,22 @@ function ProcessoVaga() {
               >
                 <span className="linha entre" style={{ width: '100%', flexWrap: 'nowrap' }}>
                   <span className="linha" style={{ gap: 8, flexWrap: 'nowrap' }}>
-                    <span className="avatar" aria-hidden="true">{iniciais(c.candidato.nome)}</span>
+                    <span className="avatar" aria-hidden="true">
+                      {c.candidato.fotoUrl ? (
+                        <img
+                          src={c.candidato.fotoUrl}
+                          alt=""
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            borderRadius: "50%"
+                          }}
+                        />
+                      ) : (
+                        iniciais(c.candidato.nome)
+                      )}
+                    </span>
                     <strong>{c.candidato.nome}</strong>
                   </span>
                   <Match valor={c.match} />
@@ -117,7 +132,32 @@ function ProcessoVaga() {
             <ul className="pilha" style={{ listStyle: 'none', padding: 0, margin: 0, gap: 8 }}>
               {finalizadas.map((c) => (
                 <li key={c.id} className="linha entre">
-                  <button type="button" className="botao-link" onClick={() => setAberta(c.id)}>{c.candidato.nome}</button>
+                  <div className="linha" style={{ gap: 8 }}>
+                    <span className="avatar" aria-hidden="true">
+                      {c.candidato.fotoUrl ? (
+                        <img
+                          src={c.candidato.fotoUrl}
+                          alt=""
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            borderRadius: "50%"
+                          }}
+                        />
+                      ) : (
+                        iniciais(c.candidato.nome)
+                      )}
+                    </span>
+
+                    <button
+                      type="button"
+                      className="botao-link"
+                      onClick={() => setAberta(c.id)}
+                    >
+                      {c.candidato.nome}
+                    </button>
+                  </div>
                   <span className="linha"><StatusCandidatura status={c.status} /><span className="texto-2 pequeno">{data(c.atualizadaEm)}</span></span>
                 </li>
               ))}
@@ -130,6 +170,10 @@ function ProcessoVaga() {
           id={aberta}
           aoFechar={() => setAberta(null)}
           aoMudar={(msg) => { setAberta(null); setAviso(msg); carregar(); }}
+          fotoUrl={
+            [...quadro.etapas.flatMap(e => e.candidaturas), ...finalizadas]
+              .find(c => c.id === aberta)?.candidato.fotoUrl
+          }
         />
       )}
     </div>
@@ -137,7 +181,7 @@ function ProcessoVaga() {
 }
 
 // Currículo enviado, linha do tempo e decisões (avançar, mover, reprovar, contratar)
-function ModalCandidatura({ id, aoFechar, aoMudar }) {
+function ModalCandidatura({ id, fotoUrl, aoFechar, aoMudar }) {
   const [c, setC] = useState(null);
   const [motivos, setMotivos] = useState([]);
   const [modo, setModo] = useState(null);          // null | 'reprovar'
@@ -148,7 +192,7 @@ function ModalCandidatura({ id, aoFechar, aoMudar }) {
 
   useEffect(() => {
     candidaturasApi.detalhar(id).then(setC).catch((e) => setErro(e.message));
-    candidaturasApi.motivos().then(setMotivos).catch(() => {});
+    candidaturasApi.motivos().then(setMotivos).catch(() => { });
   }, [id]);
 
   async function agir(dados, mensagem) {
@@ -198,6 +242,28 @@ function ModalCandidatura({ id, aoFechar, aoMudar }) {
   return (
     <Modal titulo={cv.nome} subtitulo={`${c.vaga.titulo} · enviada em ${data(c.enviadaEm)}`} aoFechar={aoFechar} rodape={rodape}>
       <div className="linha">
+        <span className="avatar" style={{
+          width: 64,
+          height: 64,
+          overflow: "hidden",
+          flexShrink: 0
+        }}>
+          {fotoUrl ? (
+            <img
+              src={fotoUrl}
+              alt={cv.nome}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                borderRadius: "50%"
+              }}
+            />
+          ) : (
+            iniciais(cv.nome || "")
+          )}
+        </span>
+
         <StatusCandidatura status={c.status} />
         {!FINAIS.includes(c.status) && <span className="pequeno">Etapa atual: <strong>{atual?.nome}</strong></span>}
       </div>

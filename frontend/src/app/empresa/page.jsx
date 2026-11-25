@@ -423,7 +423,14 @@ function PainelEmpresa() {
                                                     className="empresa-item-candidatura"
                                                 >
                                                     <span className="empresa-avatar-candidato">
-                                                        {iniciais(c.candidato.nome)}
+                                                        {c.candidato.fotoUrl ? (
+                                                            <img
+                                                                src={c.candidato.fotoUrl}
+                                                                alt={c.candidato.nome}
+                                                            />
+                                                        ) : (
+                                                            iniciais(c.candidato.nome)
+                                                        )}
                                                     </span>
 
                                                     <div className="empresa-candidato-info">

@@ -180,6 +180,76 @@
     width: auto;
 }
 
+.configuracoes-candidato button.btn-remover-imagem {
+    background: transparent;
+    color: #dc2626;
+    border: 1px solid #dc2626;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 0 0 0 8px;
+    font-size: 13px;
+    cursor: pointer;
+    width: auto;
+}
+
+.configuracoes-candidato button.btn-remover-imagem:hover {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.configuracoes-candidato button.btn-remover-imagem:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.configuracoes-candidato .foto-configuracao-info {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.configuracoes-candidato .foto-configuracao-info h3,
+.configuracoes-candidato .foto-configuracao-info p,
+.configuracoes-candidato .foto-configuracao-info small {
+    width: 100%;
+    margin: 0;
+}
+
+.configuracoes-candidato .btn-trocar-foto,
+.configuracoes-candidato button.btn-remover-imagem {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 14px;
+    margin: 0;
+    box-sizing: border-box;
+    font-size: 13px;
+    border-radius: 6px;
+    width: auto;
+}
+
+.grupo-campo select,
+.configuracoes-candidato select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    font-family: inherit;
+    font-size: 14px;
+    color: #222;
+}
+
+.grupo-campo select:focus,
+.configuracoes-candidato select:focus {
+    outline: none;
+    border-color: #c76522;
+}
+
 @media (max-width: 600px) {
     .configuracoes-candidato .foto-configuracao {
         flex-direction: column;

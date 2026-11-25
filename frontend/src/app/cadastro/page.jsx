@@ -6,6 +6,13 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../_lib/AuthContext';
 import { authApi } from '../_lib/servicos';
 import { IconeCamera } from '../_components/Icones';
+import CampoSenha from '../_components/CampoSenha';
+import {
+  mascaraTelefone,
+  mascaraCPF,
+  mascaraCNPJ
+} from '../_lib/mascaras';
+import { ESTADOS } from '../_lib/estados';
 import './cadastro.css';
 
 export default function PaginaCadastro() {
@@ -32,7 +39,32 @@ function Cadastro() {
   const campoFoto = useRef(null);
 
   function mudarCampo(evento) {
-    setCampos({ ...campos, [evento.target.name]: evento.target.value });
+    const { name, value } = evento.target;
+
+    let valor = value;
+
+    if (name === "telefone") {
+      valor = mascaraTelefone(value);
+    }
+
+    if (name === "cpf") {
+      valor = mascaraCPF(value);
+    }
+
+    if (name === "cnpj") {
+      valor = mascaraCNPJ(value);
+    }
+
+    if (name === "uf") {
+      valor = value.replace(/[^a-zA-Z]/g, "")
+        .toUpperCase()
+        .slice(0, 2);
+    }
+
+    setCampos(anterior => ({
+      ...anterior,
+      [name]: valor
+    }));
   }
 
   function trocarAba(tipo) {
@@ -93,7 +125,7 @@ function Cadastro() {
     <div className="pagina-login">
       <div className="painel-lateral">
         <div>
-        <Link className="jobmatch" href="/">JobMatch</Link>
+          <Link className="jobmatch" href="/">JobMatch</Link>
           <h2>
             Junte-se a nós<br />e comece agora
           </h2>
@@ -160,8 +192,17 @@ function Cadastro() {
             </div>
 
             <div className="grupo-campo">
-              <label>Senha</label>
-              <input type="password" name="senha" placeholder="Crie uma senha forte" minLength={8} value={campos.senha} onChange={mudarCampo} required />
+              <label htmlFor="senha-cadastro">Senha</label>
+              <CampoSenha
+                id="senha-cadastro"
+                name="senha"
+                placeholder="Crie uma senha forte"
+                minLength={8}
+                value={campos.senha}
+                onChange={mudarCampo}
+                autoComplete="new-password"
+                required
+              />
             </div>
 
             {activeTab === 'candidato' ? (
@@ -215,7 +256,20 @@ function Cadastro() {
               </div>
               <div className="grupo-campo" style={{ flex: 1 }}>
                 <label>UF</label>
-                <input type="text" name="uf" placeholder="Ex: SP" maxLength="2" value={campos.uf} onChange={mudarCampo} required />
+                <select
+                  name="uf"
+                  value={campos.uf}
+                  onChange={mudarCampo}
+                  required
+                >
+                  <option value="">Selecione</option>
+
+                  {ESTADOS.map(uf => (
+                    <option key={uf} value={uf}>
+                      {uf}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 

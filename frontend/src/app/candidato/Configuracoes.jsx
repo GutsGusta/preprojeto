@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../_lib/AuthContext";
 import "./configuracoes.css";
 import { authApi } from "../_lib/servicos";
+import CampoSenha from "../_components/CampoSenha";
+import { mascaraTelefone } from "../_lib/mascaras";
 
 export default function Configuracoes() {
     const { usuario, atualizarUsuario } = useAuth();
@@ -26,7 +28,7 @@ export default function Configuracoes() {
     useEffect(() => {
         if (usuario) {
             setNome(usuario.nome || "");
-            setTelefone(usuario.telefone || "");
+            setTelefone(mascaraTelefone(usuario.telefone || ""));
         }
     }, [usuario]);
 
@@ -53,6 +55,31 @@ export default function Configuracoes() {
         });
     }
 
+    async function removerFoto() {
+        if (!window.confirm("Deseja remover esta imagem?")) {
+            return;
+        }
+
+        setSalvandoPerfil(true);
+        setMensagemPerfil("");
+
+        try {
+            await authApi.atualizarPerfil({
+                removerFoto: true
+            });
+
+            atualizarUsuario({ fotoUrl: null });
+            setFoto(null);
+            setMensagemPerfil("Imagem removida com sucesso!");
+
+        } catch (erro) {
+            setMensagemPerfil(
+                erro.message || "Erro ao remover imagem."
+            );
+        } finally {
+            setSalvandoPerfil(false);
+        }
+    }
 
     async function salvarPerfil() {
         setMensagemPerfil("");
@@ -182,6 +209,17 @@ export default function Configuracoes() {
                             }}
                         />
 
+                        {usuario?.fotoUrl && (
+                            <button
+                                type="button"
+                                className="btn-remover-imagem"
+                                onClick={removerFoto}
+                                disabled={salvandoPerfil}
+                            >
+                                Remover foto
+                            </button>
+                        )}
+
                         <small>JPG, PNG ou WebP. Máximo de 2 MB.</small>
 
                         {foto && (
@@ -242,11 +280,10 @@ export default function Configuracoes() {
 
                 <div>
                     <label htmlFor="senha-atual">Senha atual</label>
-                    <input
+                    <CampoSenha
                         id="senha-atual"
-                        type="password"
                         value={senhaAtual}
-                        onChange={(e) => setSenhaAtual(e.target.value)}
+                        onChange={e => setTelefone(mascaraTelefone(e.target.value))}
                     />
                 </div>
 

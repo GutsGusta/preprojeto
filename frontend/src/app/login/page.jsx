@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../_lib/AuthContext';
 import './login.css';
+import CampoSenha from '../_components/CampoSenha';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -55,7 +56,7 @@ export default function LoginPage() {
         <div>
           <Link className="jobmatch" href="/">JobMatch</Link>
           <h2>
-            Sua próxima vaga<br/>começa aqui
+            Sua próxima vaga<br />começa aqui
           </h2>
           <p>
             Candidatos acompanham cada etapa. Empresas organizam o processo seletivo do início ao fim.
@@ -100,12 +101,13 @@ export default function LoginPage() {
             </div>
 
             <div className="grupo-campo">
-            <label>Senha</label>
-              <input
-                type="password"
+              <label htmlFor="senha-login">Senha</label>
+              <CampoSenha
+                id="senha-login"
                 placeholder="Mínimo de 8 caracteres"
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
+                autoComplete="current-password"
                 required
               />
             </div>
