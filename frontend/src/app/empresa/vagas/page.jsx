@@ -130,6 +130,20 @@ function MinhasVagas() {
                           onClick={() => mudarStatus(v, a.status)}>{a.rotulo}</button>
                       ))}
                       {v.status !== 'RASCUNHO' && <button type="button" className="botao neutro pequeno" onClick={() => duplicar(v)}>Duplicar</button>}
+                      {v.status !== 'RASCUNHO' && (
+                        <Link
+                          href={`/empresa/vagas/${v.id}/processo`}
+                          className="botao pequeno"
+                          style={{
+                            backgroundColor: '#ea7623',
+                            borderColor: '#ea7623',
+                            color: '#ffffff',
+                            whiteSpace: 'nowrap'
+                          }}
+                        >
+                          Ver processo
+                        </Link>
+                      )}
                       {v.status === 'RASCUNHO' && <button type="button" className="botao perigo pequeno" onClick={() => excluir(v)}>Excluir</button>}
                     </div>
                   </td>
